@@ -1,5 +1,6 @@
 package com.lightingorder;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -15,17 +16,21 @@ public class FunctionalityActivity extends AppCompatActivity {
 
     ListView lv_function;
     ArrayList<Functionality> funs;
-    String[] roles = {
-        "Cameriere",
-        "Accoglienza"
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.roles_selection);
         funs = new ArrayList<Functionality>();
+
+        ArrayList<String> roles = new ArrayList<String>();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            roles = extras.getStringArrayList("Ruoli");
+            //The key argument here must match that used in the other activity
+        }
+
         for(String r : roles){
             if(r.equals(StdTerms.roles.Bar.name())){
 
@@ -40,7 +45,7 @@ public class FunctionalityActivity extends AppCompatActivity {
             }
         }
         Toast t = Toast.makeText(this, "", Toast.LENGTH_LONG);
-        ListAdapter adapter = new ListAdapter(this, funs);
+        FunctionalityAdapter adapter = new FunctionalityAdapter(this, funs);
         lv_function = (ListView) findViewById(R.id.function_list);
         lv_function.setAdapter(adapter);
 
@@ -49,8 +54,8 @@ public class FunctionalityActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Functionality f = funs.get(position);
                 if(f.getID().equals(StdTerms.use_cases.AggiornaStatoTavolo.name())){
-                    t.setText(f.getID());
-                    t.show();
+                    Intent i = new Intent(getApplicationContext(), TableActivity.class);
+                    startActivity(i);
                 }
             }
         });

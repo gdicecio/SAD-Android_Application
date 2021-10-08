@@ -26,6 +26,10 @@
         <activity
             android:name=".FunctionalityActivity" >
         </activity>
+
+        <activity
+            android:name=".TableActivity" >
+        </activity>
     </application>
 
 </manifest>

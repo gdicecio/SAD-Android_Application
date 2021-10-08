@@ -20,6 +20,8 @@ import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
 
 
-
-
         //Body of my Login (ID, etc)
 
         JSONObject j = new JSONObject();
@@ -98,9 +98,11 @@ public class MainActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 */
+        ArrayList<String> ruoli_utente = new ArrayList<String>();
+        ruoli_utente.add(StdTerms.roles.Cameriere.name());
+        ruoli_utente.add(StdTerms.roles.Accoglienza.name());
         Intent i = new Intent(this, FunctionalityActivity.class);
+        i.putStringArrayListExtra("Ruoli", ruoli_utente);
         startActivity(i);
-
-
     }
 }

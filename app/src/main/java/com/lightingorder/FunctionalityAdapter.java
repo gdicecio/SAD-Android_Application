@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ListAdapter extends ArrayAdapter<Functionality> {
+public class FunctionalityAdapter extends ArrayAdapter<Functionality> {
 
     private final Activity context;
 
-    public ListAdapter(Activity context, ArrayList<Functionality> f){
+    public FunctionalityAdapter(Activity context, ArrayList<Functionality> f){
         super(context, R.layout.item_list, f);
         this.context = context;
     }
