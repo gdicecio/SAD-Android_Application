@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class ConnectivityController {   //Singleton
     private static ConnectivityController istanza = null;
-    private static final AsyncHttpServer server = new AsyncHttpServer();
+    private static AsyncHttpServer server = new AsyncHttpServer();
 
     private ConnectivityController(){}
     public static synchronized ConnectivityController getConnectivity(){
@@ -46,8 +46,7 @@ public class ConnectivityController {   //Singleton
         Gson gson = new Gson();
         UserSessionController user_contr = new UserSessionController();
 
-        AsyncHttpServer server = new AsyncHttpServer();
-        server.post("/login", new HttpServerRequestCallback() {
+        istanza.server.post("/login", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 //Retrieve the message body as String (in JSON format)
@@ -68,8 +67,8 @@ public class ConnectivityController {   //Singleton
             }
         });
 
-/*
-        server.post("/request", new HttpServerRequestCallback() {
+        
+        istanza.server.post("/request", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 //Retrieve the message body as String (in JSON format)
@@ -135,7 +134,7 @@ public class ConnectivityController {   //Singleton
         });
 
 
-        server.post("/notification", new HttpServerRequestCallback() {
+        istanza.server.post("/notification", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 //Retrieve the message body as String (in JSON format)
@@ -166,12 +165,12 @@ public class ConnectivityController {   //Singleton
         });
 
 
-*/
+
     }
 
 
     public void startServer(int port){
-        server.listen(port);
+        istanza.server.listen(port);
     }
 
 
