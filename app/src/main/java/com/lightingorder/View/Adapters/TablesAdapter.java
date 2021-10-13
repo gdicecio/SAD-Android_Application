@@ -1,4 +1,4 @@
-package com.lightingorder;
+package com.lightingorder.View.Adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.lightingorder.Model.Table;
+import com.lightingorder.R;
 
 import java.util.ArrayList;
 
@@ -25,7 +28,7 @@ public class TablesAdapter extends ArrayAdapter<Table>{
 
             TextView iconText = (TextView) view.findViewById(R.id.icon);
 
-            iconText.setText(tab.getText());
+            iconText.setText(tab.getIdAndState());
             iconText.setBackgroundColor(tab.getColor());
 
             return view;

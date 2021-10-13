@@ -1,12 +1,14 @@
-package com.lightingorder;
+package com.lightingorder.View.Adapters;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.lightingorder.Model.Functionality;
+import com.lightingorder.R;
 
 import java.util.ArrayList;
 
