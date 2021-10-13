@@ -16,7 +16,7 @@ public class Table {
     private int tableRoomNumber;
 
     @Expose(serialize=true,deserialize=true)
-    private List<String> orders;
+    private String orders;
 
     public Table(String tableID, String stato) {
         this.tableID = tableID;

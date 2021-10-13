@@ -67,7 +67,7 @@ public class ConnectivityController {   //Singleton
             }
         });
 
-        
+
         istanza.server.post("/request", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
@@ -176,7 +176,7 @@ public class ConnectivityController {   //Singleton
 
     static private void sendPost(Context context, String body, String urlDestination){
         //POST Request whit String Body
-        AsyncHttpRequest req = new AsyncHttpRequest(Uri.parse(urlDestination), "POST");
+        AsyncHttpRequest req = new AsyncHttpRequest(Uri.parse("http://"+urlDestination), "POST");
         StringBody post_body = new StringBody(body);
         req.setBody(post_body);
 

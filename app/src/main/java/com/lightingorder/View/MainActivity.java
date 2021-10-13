@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         ConnectivityController.sendLoginRequest(getApplicationContext(),user_contr);
 
-        new CountDownTimer(1000, 1000) {
+        new CountDownTimer(3000, 1000) {
             public void onFinish() {
                 // When timer is finished // Execute your code here
                 Intent i = new Intent(getApplicationContext(), FunctionalityActivity.class);
