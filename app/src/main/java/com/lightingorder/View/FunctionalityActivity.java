@@ -10,8 +10,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.lightingorder.Controller.AppStateController;
 import com.lightingorder.View.Adapters.FunctionalityAdapter;
-import com.lightingorder.Controller.UserController;
+import com.lightingorder.Controller.UserSessionController;
 import com.lightingorder.R;
 import com.lightingorder.StdTerms;
 import com.lightingorder.Model.Functionality;
@@ -22,7 +23,7 @@ public class FunctionalityActivity extends AppCompatActivity {
 
     ListView lv_function;
     ArrayList<Functionality> funs;
-    UserController user_contr = new UserController();
+    UserSessionController user_contr = new UserSessionController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,4 +109,10 @@ public class FunctionalityActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppStateController.getApplication().setCurrent_activity(this);
+    }
 }

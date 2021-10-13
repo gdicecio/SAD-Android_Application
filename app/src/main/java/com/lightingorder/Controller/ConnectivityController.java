@@ -9,7 +9,11 @@ import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpRequest;
 import com.koushikdutta.async.http.AsyncHttpResponse;
 import com.koushikdutta.async.http.body.StringBody;
-import com.lightingorder.Model.User;
+import com.koushikdutta.async.http.server.AsyncHttpServer;
+import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
+import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
+import com.koushikdutta.async.http.server.HttpServerRequestCallback;
+import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
@@ -17,15 +21,103 @@ import com.lightingorder.StdTerms;
 
 public class ConnectivityController {
     private static ConnectivityController istanza = null;
-
+    private static final AsyncHttpServer server = new AsyncHttpServer();
 
     private ConnectivityController(){}
-
     public static synchronized ConnectivityController getConnectivity(){
         if(istanza == null){
             istanza = new ConnectivityController();
         }
         return istanza;
+    }
+
+
+    public void configPostMapping() {
+
+        Gson gson = new Gson();
+        UserSessionController user_contr = new UserSessionController();
+
+        AsyncHttpServer server = new AsyncHttpServer();
+        server.post("/login", new HttpServerRequestCallback() {
+            @Override
+            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                //Retrieve the message body as String (in JSON format)
+                String req = request.getBody().toString();
+                //Create the object using the JSON string
+                loginRequest msg_rcvd = gson.fromJson(req, loginRequest.class);
+                // Add to the Hashmap the user role and the address of the proxy which manage the requests from that role
+                user_contr.addRoleAndProxy(msg_rcvd.result, msg_rcvd.proxySource);
+                AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast t = Toast.makeText(AppStateController.getApplication().getCurrent_activity(), "Ruolo " + msg_rcvd.result + " aggiunto!", Toast.LENGTH_LONG);
+                        t.show();
+                    }
+                });
+
+                //Sending the response to the proxy
+                response.code(200);
+                response.send("Message received");
+            }
+        });
+
+        server.post("/notification", new HttpServerRequestCallback() {
+            @Override
+            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                //Retrieve the message body as String (in JSON format)
+                String req = request.getBody().toString();
+                //Create the object using the JSON string
+                baseMessage msg_rcvd = gson.fromJson(req, baseMessage.class);
+                String message_type  = msg_rcvd.messageName;
+                String txt_to_show = "";
+                switch (message_type) {
+                    case "cancelOrderedItemRequest":
+                        txt_to_show = "Product removed from the order";
+                        break;
+
+                    case "cancelOrderRequest":
+                        txt_to_show = "Order removed";
+                        break;
+
+                    case "orderToTableGenerationRequest":
+                        txt_to_show = "Order added";
+                        break;
+
+                    case "freeTableRequest":
+                    case "userWaitingForOrderRequest":
+                        txt_to_show = "Table state updated";
+                        break;
+
+                    case "itemCompleteRequest":
+                        txt_to_show = "Action registered";
+                        break;
+
+                    case "itemWorkingRequest":
+                        txt_to_show = "Request accepted";
+                        break;
+
+                    default: txt_to_show = "Message not recognized";
+                }
+
+                String finalTxt_to_show = txt_to_show;
+                AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast t = Toast.makeText(AppStateController.getApplication().getCurrent_activity(), finalTxt_to_show, Toast.LENGTH_LONG);
+                        t.show();
+                    }
+                });
+
+                //Sending the response to the proxy
+                response.code(200);
+                response.send("Message received");
+            }
+        });
+
+
+    }
+
+
+    public void startServer(int port){
+        server.listen(port);
     }
 
     static private void sendPost(Context context, String body, String urlDestination){
@@ -57,7 +149,7 @@ public class ConnectivityController {
         }
     }
 
-    public static void sendLoginRequest(Context ctx, UserController us_contr){
+    public static void sendLoginRequest(Context ctx, UserSessionController us_contr){
 
         //Body of my request ---> request type = loginRequest
         loginRequest req_body = new loginRequest(
@@ -74,7 +166,7 @@ public class ConnectivityController {
         ConnectivityController.sendPost(ctx, msg_body, StdTerms.proxyLoginAddress);
     }
 
-    public static void sendTableRequest(Context ctx, UserController us_contr, String proxy_addr){
+    public static void sendTableRequest(Context ctx, UserSessionController us_contr, String proxy_addr){
 
         //Body of my request ---> request type = tableRequest
         tableRequest req_body = new tableRequest(
@@ -95,7 +187,7 @@ public class ConnectivityController {
     }
 
 
-    public static void sendTableOperationRequest(Context ctx, UserController us_contr, String proxy_addr,
+    public static void sendTableOperationRequest(Context ctx, UserSessionController us_contr, String proxy_addr,
                                                  String tableID, int tableRoom, String new_state){
 
         String message_name = "";

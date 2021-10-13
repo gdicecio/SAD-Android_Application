@@ -4,10 +4,11 @@ import com.lightingorder.Model.User;
 
 import java.util.HashMap;
 
-public class UserController {
-    private static User utente = new User();
+public class UserSessionController {
+    private User utente;
 
-    public UserController() {
+    public UserSessionController() {
+        this.utente = User.getUser();
     }
 
     public void addRoleAndProxy(String role, String proxy_address){

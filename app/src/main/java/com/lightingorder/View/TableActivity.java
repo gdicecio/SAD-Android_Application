@@ -9,14 +9,13 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
 import com.lightingorder.Controller.ConnectivityController;
-import com.lightingorder.Controller.UserController;
+import com.lightingorder.Controller.AppStateController;
+import com.lightingorder.Controller.UserSessionController;
 import com.lightingorder.R;
 import com.lightingorder.StdTerms;
 import com.lightingorder.Model.StateOp;
 import com.lightingorder.View.Adapters.StateAdapter;
-import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.Table;
 import com.lightingorder.View.Adapters.TablesAdapter;
 
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 public class TableActivity extends AppCompatActivity {
 
     GridView tables_view;
-    UserController user_contr = new UserController();
+    UserSessionController user_contr = new UserSessionController();
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
@@ -78,12 +77,11 @@ public class TableActivity extends AppCompatActivity {
                 else if(role.equals(StdTerms.roles.Accoglienza.name())) {
                     createNewContactDialog(role,proxy_addr,tab.ID,tab.stato);
                 }
-
             }
         });
     }
 
-    public void createNewContactDialog(String role, String proxy_addr, String tableID, String currentTableState){
+    private void createNewContactDialog(String role, String proxy_addr, String tableID, String currentTableState){
         dialogBuilder = new AlertDialog.Builder(this);
         final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
         operationsAvlbl = new ArrayList<StateOp>();
@@ -115,5 +113,12 @@ public class TableActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppStateController.getApplication().setCurrent_activity(this);
+    }
+
 
 }
