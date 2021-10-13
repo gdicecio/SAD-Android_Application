@@ -9,6 +9,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.lightingorder.Controller.ConnectivityController;
 import com.lightingorder.Controller.AppStateController;
 import com.lightingorder.Controller.UserSessionController;
@@ -18,6 +19,9 @@ import com.lightingorder.Model.StateOp;
 import com.lightingorder.View.Adapters.StateAdapter;
 import com.lightingorder.Model.Table;
 import com.lightingorder.View.Adapters.TablesAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -37,21 +41,26 @@ public class TableActivity extends AppCompatActivity {
         setContentView(R.layout.table_map);
         tables_view = (GridView) findViewById(R.id.tables);
 
-        String proxy_addr =  getIntent().getExtras().getString("proxyAddress");
-        String role =  getIntent().getExtras().getString("ruolo");
+        String proxy_addr =  getIntent().getExtras().getString("proxy_corrente");
+        String role =  getIntent().getExtras().getString("ruolo_corrente");
+        String JSONtables = getIntent().getExtras().getString("JSONString_tavoli");
 
         /*TODO
             * Aggiunta tavoli alla gridview
         */
-        //FORSE VA MESSO IN FUNCTIONALITY: ALL'ON-COMPLETED VEDO IL TIPO
-        // DI MESSAGGIO E DECIDO COSA FARE, SE SALTARE A UNA NUOVA ACTIVITY O REFRESHARE QUELLA ATTUALE
-
-        ConnectivityController.sendTableRequest(getApplicationContext(),user_contr,proxy_addr);
-        //Attesa risposta
-
+        Gson gson = new Gson();
         ArrayList<Table> tables = new ArrayList<Table>();
+        try {
+            JSONArray j = new JSONArray(JSONtables);
+            for(int i=0; i<j.length(); i++){
+                tables.add(gson.fromJson(j.getString(i), Table.class));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        tables.add(new Table("1", "free"));
+
+      /*  tables.add(new Table("1", "free"));
         tables.add(new Table("2", "reserved"));
         tables.add(new Table("3", "Occupied"));
         tables.add(new Table("4", "Occupied"));
@@ -60,7 +69,7 @@ public class TableActivity extends AppCompatActivity {
         tables.add(new Table("7", "waitingForOrders"));
         tables.add(new Table("8", "Occupied"));
         tables.add(new Table("9", "free"));
-        tables.add(new Table("10", "free"));
+        tables.add(new Table("10", "free"));*/
 
         TablesAdapter tab_adap = new TablesAdapter(this, tables);
         tables_view.setAdapter(tab_adap);
@@ -71,11 +80,10 @@ public class TableActivity extends AppCompatActivity {
                 Table tab = tables.get(position);
 
                 if (role.equals(StdTerms.roles.Cameriere.name())) {
-
-                    //TODO mostra la schermata di creazione ordinazione (SOLO SE il tavolo è occupato/in attesa).
+                    //TODO mostra la lista degli ordini del tavolo e nell'activity (SOLO SE il tavolo è occupato/in attesa).
                 }
                 else if(role.equals(StdTerms.roles.Accoglienza.name())) {
-                    createNewContactDialog(role,proxy_addr,tab.ID,tab.stato);
+                    createNewContactDialog(role,proxy_addr,tab.tableID,tab.actualState);
                 }
             }
         });
@@ -85,6 +93,7 @@ public class TableActivity extends AppCompatActivity {
         dialogBuilder = new AlertDialog.Builder(this);
         final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
         operationsAvlbl = new ArrayList<StateOp>();
+
         if(currentTableState.equals(StdTerms.statesList.free.name())){
             operationsAvlbl.add(new StateOp("Riserva tavolo", StdTerms.blue, StdTerms.statesList.reserved.name()));
             operationsAvlbl.add(new StateOp("Occupa tavolo", StdTerms.red, StdTerms.statesList.Occupied.name()));
@@ -118,6 +127,8 @@ public class TableActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
+
+        //TODO riprenditi i dati dei tavoli
     }
 
 

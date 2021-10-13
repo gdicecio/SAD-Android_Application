@@ -1,72 +1,67 @@
 package com.lightingorder.Model;
 
-import com.lightingorder.StdTerms;
+import com.google.gson.annotations.Expose;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Table {
-    public String ID;
-    public String stato;
-    static final private Map<String, Integer> color;
+    @Expose(serialize=true,deserialize=true)
+    public String tableID;
 
-    static {
-        Map <String, Integer> aMap = new HashMap<String, Integer>();
-        aMap.put(StdTerms.statesList.waitingForOrders.name(),StdTerms.orange);//YELLOW
-        aMap.put(StdTerms.statesList.Occupied.name(), StdTerms.red);//RED
-        aMap.put(StdTerms.statesList.free.name(), StdTerms.green);//GREEN
-        aMap.put(StdTerms.statesList.reserved.name(), StdTerms.blue);//BLUE
-        color = Collections.unmodifiableMap(aMap);
+    @Expose(serialize=true,deserialize=true)
+    public String actualState;
+
+    @Expose(serialize=true,deserialize=true)
+    private int tableRoomNumber;
+
+    @Expose(serialize=true,deserialize=true)
+    private List<String> orders;
+
+    public Table(String tableID, String stato) {
+        this.tableID = tableID;
+        this.actualState = stato;
     }
 
-    public Table(String ID, String stato) {
-        this.ID = ID;
-        this.stato = stato;
+    public String getActualState() {
+        return actualState;
     }
 
-    public String getStato() {
-        return stato;
+    public void setActualState(String actualState) {
+        this.actualState = actualState;
     }
 
-    public void setStato(String stato) {
-        this.stato = stato;
+    public String getTableID() {
+        return tableID;
     }
 
-    public String getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setTableID(String tableID) {
+        this.tableID = tableID;
     }
 
     public String getText(){
-        return this.ID;
+        return this.tableID;
     }
 
     public String getIdAndState() {
         String to_ret;
-        switch (this.stato) {
+        switch (this.actualState) {
             case "free":
-                 to_ret = this.ID + "\n\n" + "Free";
+                 to_ret = this.tableID + "\n\n" + "Free";
             break;
             case "waitingForOrders":
-                to_ret = this.ID + "\n\n" + "Waiting";
+                to_ret = this.tableID + "\n\n" + "Waiting";
             break;
             case "Occupied":
-                to_ret = this.ID + "\n\n" + "Occupied";
+                to_ret = this.tableID + "\n\n" + "Occupied";
             break;
             case "reserved":
-                to_ret = this.ID + "\n\n" + "Reserved";
+                to_ret = this.tableID + "\n\n" + "Reserved";
             break;
             default:
                 to_ret = "State not recognized";
         }
         return to_ret;
     }
-            
-    public int getColor() {
-        return color.get(this.stato);
-    }
+
 }

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lightingorder.Controller.AppStateController;
+import com.lightingorder.Controller.ConnectivityController;
 import com.lightingorder.View.Adapters.FunctionalityAdapter;
 import com.lightingorder.Controller.UserSessionController;
 import com.lightingorder.R;
@@ -65,7 +66,6 @@ public class FunctionalityActivity extends AppCompatActivity {
             }
         }
 
-        Toast t = Toast.makeText(this, "", Toast.LENGTH_LONG);
 
         FunctionalityAdapter adapter = new FunctionalityAdapter(this, funs);
         lv_function = (ListView) findViewById(R.id.function_list);
@@ -81,29 +81,21 @@ public class FunctionalityActivity extends AppCompatActivity {
                 String use_case =  f.getID();
 
                 //Retrieve the role needed for this use case
-                String role_needed = StdTerms.UC_Role.get(use_case);
+                user_contr.setCurrentRole(StdTerms.UC_Role.get(use_case));
 
-                //Retrieve the url of the proxy in charge to manage the request from users with this role
-                String url_proxy = user_contr.getHashRuoli_Proxy().get(role_needed);
+                //Retrieve the relative proxy address
+                String proxy_add = user_contr.getHashRuoli_Proxy().get(user_contr.getCurrentRole());
 
                 if(use_case.equals(StdTerms.useCases.CreaOrdinazione.name()) ||
                         use_case.equals(StdTerms.useCases.AggiornaStatoTavolo.name())) {
+                    ConnectivityController.sendTableRequest(getApplicationContext(),user_contr,proxy_add);
 
-                    Intent i = new Intent(getApplicationContext(), TableActivity.class);
-                    i.putExtra("ProxyAddress", url_proxy);
-                    i.putExtra("ruolo", role_needed);
-                    startActivity(i);
                 }
                 else if(use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniBar.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniCucina.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniForno.name()) ){
-
                     //TODO Aggiungere activty per realizzatori
 
-                    Intent i = new Intent(getApplicationContext(), TableActivity.class);
-                    i.putExtra("proxyAddress", url_proxy);
-                    i.putExtra("ruolo", role_needed);
-                    startActivity(i);
                 }
             }
         });

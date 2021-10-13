@@ -9,14 +9,30 @@ import android.widget.TextView;
 
 import com.lightingorder.Model.Table;
 import com.lightingorder.R;
+import com.lightingorder.StdTerms;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TablesAdapter extends ArrayAdapter<Table>{
 
-        private final Activity context;
+    private final Activity context;
 
-        public TablesAdapter(Activity context, ArrayList<Table> t){
+    static final private Map<String, Integer> color;
+
+    static {
+        Map <String, Integer> aMap = new HashMap<String, Integer>();
+        aMap.put(StdTerms.statesList.waitingForOrders.name(),StdTerms.orange);//YELLOW
+        aMap.put(StdTerms.statesList.Occupied.name(), StdTerms.red);//RED
+        aMap.put(StdTerms.statesList.free.name(), StdTerms.green);//GREEN
+        aMap.put(StdTerms.statesList.reserved.name(), StdTerms.blue);//BLUE
+        color = Collections.unmodifiableMap(aMap);
+    }
+
+
+    public TablesAdapter(Activity context, ArrayList<Table> t){
             super(context, R.layout.tables_item_list, t);
             this.context = context;
         }
@@ -29,7 +45,7 @@ public class TablesAdapter extends ArrayAdapter<Table>{
             TextView iconText = (TextView) view.findViewById(R.id.icon);
 
             iconText.setText(tab.getIdAndState());
-            iconText.setBackgroundColor(tab.getColor());
+            iconText.setBackgroundColor(color.get(tab.actualState));
 
             return view;
         }

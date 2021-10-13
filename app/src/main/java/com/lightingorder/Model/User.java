@@ -3,12 +3,13 @@ package com.lightingorder.Model;
 import com.lightingorder.Controller.ConnectivityController;
 
 import java.util.HashMap;
-//TODO Singleton
+
 public class User {
     private static User istanza = null;
     private  String ID;
     private  HashMap<String,String> ruoli_proxy = new HashMap<String,String>();
     private  String ipAddress;
+    private  String current_role;
 
     private User() { }
 
@@ -39,7 +40,9 @@ public class User {
         return istanza.ipAddress;
     }
 
-    public  void setIpAddress(String ipAddress) {
-        istanza.ipAddress = ipAddress;
-    }
+    public  void setIpAddress(String ipAddress) { istanza.ipAddress = ipAddress;}
+
+    public String getCurrent_role() {return istanza.current_role;}
+
+    public void setCurrent_role(String current_role) {istanza.current_role = current_role;}
 }

@@ -3,8 +3,8 @@ package com.lightingorder.Controller;
 import android.app.Activity;
 import android.content.Context;
 
+//Singleton
 public class AppStateController {
-
     private static AppStateController istanza = null;
     private Activity current_activity;
 

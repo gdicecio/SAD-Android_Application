@@ -1,10 +1,12 @@
 package com.lightingorder.Controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpRequest;
 import com.koushikdutta.async.http.AsyncHttpResponse;
@@ -13,13 +15,21 @@ import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
+import com.lightingorder.Model.Table;
 import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
+import com.lightingorder.View.FunctionalityActivity;
+import com.lightingorder.View.TableActivity;
 
-public class ConnectivityController {
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+
+public class ConnectivityController {   //Singleton
     private static ConnectivityController istanza = null;
     private static final AsyncHttpServer server = new AsyncHttpServer();
 
@@ -30,7 +40,6 @@ public class ConnectivityController {
         }
         return istanza;
     }
-
 
     public void configPostMapping() {
 
@@ -53,14 +62,14 @@ public class ConnectivityController {
                         t.show();
                     }
                 });
-
                 //Sending the response to the proxy
                 response.code(200);
                 response.send("Message received");
             }
         });
 
-        server.post("/notification", new HttpServerRequestCallback() {
+/*
+        server.post("/request", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 //Retrieve the message body as String (in JSON format)
@@ -69,35 +78,48 @@ public class ConnectivityController {
                 baseMessage msg_rcvd = gson.fromJson(req, baseMessage.class);
                 String message_type  = msg_rcvd.messageName;
                 String txt_to_show = "";
-                switch (message_type) {
-                    case "cancelOrderedItemRequest":
-                        txt_to_show = "Product removed from the order";
-                        break;
 
-                    case "cancelOrderRequest":
-                        txt_to_show = "Order removed";
-                        break;
+                if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
+                    switch (message_type) {
+                        case "cancelOrderedItemRequest":
+                            txt_to_show = "Product removed from the order";
+                            break;
 
-                    case "orderToTableGenerationRequest":
-                        txt_to_show = "Order added";
-                        break;
+                        case "cancelOrderRequest":
+                            txt_to_show = "Order removed";
+                            break;
 
-                    case "freeTableRequest":
-                    case "userWaitingForOrderRequest":
-                        txt_to_show = "Table state updated";
-                        break;
+                        case "orderToTableGenerationRequest":
+                            txt_to_show = "Order added";
+                            break;
 
-                    case "itemCompleteRequest":
-                        txt_to_show = "Action registered";
-                        break;
+                        case "freeTableRequest":
+                        case "userWaitingForOrderRequest":
+                            txt_to_show = "Table state updated";
+                            break;
 
-                    case "itemWorkingRequest":
-                        txt_to_show = "Request accepted";
-                        break;
+                        case "itemCompleteRequest":
+                            txt_to_show = "Action registered";
+                            break;
 
-                    default: txt_to_show = "Message not recognized";
+                        case "itemWorkingRequest":
+                            txt_to_show = "Request accepted";
+                            break;
+
+                        case "tableRequest":
+                            String proxy_add = user_contr.getHashRuoli_Proxy().get(user_contr.getCurrentRole());
+                            Intent i = new Intent(AppStateController.getApplication().getCurrent_activity(), TableActivity.class);
+                            i.putExtra("ruolo_corrente", user_contr.getCurrentRole());
+                            i.putExtra("proxy_corrente", proxy_add);
+                            i.putExtra("JSONString_tavoli", msg_rcvd.response);
+                            AppStateController.getApplication().getCurrent_activity().startActivity(i);
+                            break;
+
+                        default:
+                            txt_to_show = "Message not recognized";
+                    }
                 }
-
+                else txt_to_show = "There were problem with the Main System";
                 String finalTxt_to_show = txt_to_show;
                 AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
                     public void run() {
@@ -113,12 +135,45 @@ public class ConnectivityController {
         });
 
 
+        server.post("/notification", new HttpServerRequestCallback() {
+            @Override
+            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                //Retrieve the message body as String (in JSON format)
+                String req = request.getBody().toString();
+                //Create the object using the JSON string
+                baseMessage msg_rcvd = gson.fromJson(req, baseMessage.class);
+                String message_type  = msg_rcvd.messageName;
+
+                if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
+                    switch (message_type) {
+                        case "ok":
+                        default:
+
+                    }
+                }
+                else {}
+
+                AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
+                    public void run() {
+
+                    }
+                });
+
+                //Sending the response to the proxy
+                response.code(200);
+                response.send("Message received");
+            }
+        });
+
+
+*/
     }
 
 
     public void startServer(int port){
         server.listen(port);
     }
+
 
     static private void sendPost(Context context, String body, String urlDestination){
         //POST Request whit String Body

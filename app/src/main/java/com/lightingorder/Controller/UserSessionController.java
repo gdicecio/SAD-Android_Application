@@ -34,4 +34,8 @@ public class UserSessionController {
     public HashMap<String,String> getHashRuoli_Proxy(){
         return utente.getRuoli_proxy();
     }
+
+    public String getCurrentRole(){ return utente.getCurrent_role();}
+
+    public void setCurrentRole(String new_role){ utente.setCurrent_role(new_role);}
 }

@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ed_user_id = (EditText) findViewById(R.id.user_id);
         b_login = (Button) findViewById(R.id.login);
+
         conn_contr.configPostMapping();
         conn_contr.startServer(StdTerms.server_port);
     }
@@ -51,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
 
-        user_contr.setUserIpAddress(ipAddress+":"+Integer.toString(StdTerms.server_port));
+        user_contr.setUserIpAddress(ipAddress+":"+(StdTerms.server_port));
 
-        //ConnectivityController.sendLoginRequest(getApplicationContext(),user_contr);
+        ConnectivityController.sendLoginRequest(getApplicationContext(),user_contr);
 
         new CountDownTimer(1000, 1000) {
             public void onFinish() {
