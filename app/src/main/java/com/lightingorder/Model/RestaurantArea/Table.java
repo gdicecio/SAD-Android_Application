@@ -21,12 +21,14 @@ public class Table {
     private int tableRoomNumber;
 
     @Expose(serialize=false,deserialize=false)
-    public List<Order> orders;
+    public List<Order> orders = new ArrayList<Order>();
+
+    public Table(){};
 
     public Table(String tableID, String stato) {
         this.tableID = tableID;
         this.tableState = stato;
-        orders = new ArrayList<Order>();
+        this.orders = new ArrayList<Order>();
     }
 
     public String getTableState() {
@@ -39,13 +41,11 @@ public class Table {
         try {
             JSONArray j = new JSONArray(orders_json);
             for(int i=0; i<j.length(); i++){
-                temp = j.getJSONObject(i).getString("orderID");
                 Order o = new Order();
-                o.setOrderID(j.getJSONObject(i).getInt("orderID"));
-                o.setOrderState(j.getJSONObject(i).getString("orderState"));
-                o.setCompletedItemNumber(j.getJSONObject(i).getInt("completedItemNumber"));
-                o.setUserID(j.getJSONObject(i).getString("userID"));
-                orders.add(o);
+                o = (Order) gson.fromJson(j.get(i).toString(), Order.class);
+                //String ordered_item = j.getJSONObject(i).get("orderedItems").toString();
+                //o.setOrderedItemFromJson(ordered_items);
+                this.orders.add(o);
             }
         } catch (JSONException e) {
             e.printStackTrace();

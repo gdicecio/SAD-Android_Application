@@ -16,8 +16,15 @@ public class Order {
     @Expose(serialize=true,deserialize=true)
     private String userID;
 
+    @Expose(serialize = true, deserialize = true)
+    private int tableRoomNumber;
+
     //@Expose(serialize=false,deserialize=false)
-    //private List<OrderedItem> orderedItems;
+    //private List<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
+
+
+
+
 
     public int getOrderID() {
         return orderID;

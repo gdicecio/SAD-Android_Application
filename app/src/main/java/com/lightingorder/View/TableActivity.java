@@ -45,17 +45,16 @@ public class TableActivity extends AppCompatActivity {
         String role =  getIntent().getExtras().getString("ruolo_corrente");
         String JSONtables = getIntent().getExtras().getString("JSONString_tavoli");
 
-        /*TODO
-            * Aggiunta tavoli alla gridview
-        */
+
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         ArrayList<Table> tables = new ArrayList<Table>();
         try {
             JSONArray j = new JSONArray(JSONtables);
             for(int i=0; i<j.length(); i++){
-                Table single_table = gson.fromJson(j.get(i).toString(), Table.class);
-             //   String order_json = j.getJSONObject(i).get("orders").toString();
-             //   single_table.setOrderFromJson(order_json);
+                Table single_table = new Table();
+                single_table = (Table) gson.fromJson(j.get(i).toString(), Table.class);
+                String order_json = j.getJSONObject(i).get("orders").toString();
+                single_table.setOrderFromJson(order_json);
                 tables.add(single_table);
             }
         } catch (JSONException e) {
