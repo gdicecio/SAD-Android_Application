@@ -1,7 +1,5 @@
 package com.lightingorder.Model;
 
-import com.lightingorder.Controller.ConnectivityController;
-
 import java.util.HashMap;
 
 //Singleton
@@ -46,4 +44,5 @@ public class User {
     public String getCurrent_role() {return istanza.current_role;}
 
     public void setCurrent_role(String current_role) {istanza.current_role = current_role;}
+
 }

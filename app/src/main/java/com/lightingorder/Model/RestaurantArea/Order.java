@@ -1,6 +1,14 @@
 package com.lightingorder.Model.RestaurantArea;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Order {
 
@@ -19,12 +27,11 @@ public class Order {
     @Expose(serialize = true, deserialize = true)
     private int tableRoomNumber;
 
-    //@Expose(serialize=false,deserialize=false)
-    //private List<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
+    @Expose(serialize=true,deserialize=true)
+    private List<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
 
 
-
-
+    public Order(){}
 
     public int getOrderID() {
         return orderID;
@@ -57,7 +64,5 @@ public class Order {
     public void setUserID(String userID) {
         this.userID = userID;
     }
-
-    public Order(){}
 
 }

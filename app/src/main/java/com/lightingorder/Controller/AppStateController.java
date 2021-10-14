@@ -7,6 +7,7 @@ import android.content.Context;
 public class AppStateController {
     private static AppStateController istanza = null;
     private Activity current_activity;
+    private int proxyConnectionState;        //Code of proxy response
 
     private AppStateController(){}
 
@@ -27,5 +28,15 @@ public class AppStateController {
 
     public Context getCurrentContext(){
         return istanza.current_activity.getApplicationContext();
+    }
+
+    public int getProxyConnectionState() {return istanza.proxyConnectionState; }
+
+    public void setProxyConnectionState(int connectionState) {istanza.proxyConnectionState = connectionState;}
+
+    public boolean connectionStateIsOK(){
+        if(istanza.proxyConnectionState >= 200 && istanza.proxyConnectionState < 300)
+            return true;
+        else return false;
     }
 }

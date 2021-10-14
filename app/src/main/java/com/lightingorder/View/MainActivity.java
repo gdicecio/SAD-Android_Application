@@ -61,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
         new CountDownTimer(3000, 1000) {
             public void onFinish() {
                 // When timer is finished // Execute your code here
-                Intent i = new Intent(getApplicationContext(), FunctionalityActivity.class);
-                startActivity(i);
+                if(AppStateController.getApplication().connectionStateIsOK()){
+                    Intent i = new Intent(getApplicationContext(), FunctionalityActivity.class);
+                    startActivity(i);
+                }
             }
             public void onTick(long millisUntilFinished) {
                 // millisUntilFinished    The amount of time until finished.

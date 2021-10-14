@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpRequest;
 import com.koushikdutta.async.http.AsyncHttpResponse;
@@ -14,6 +15,8 @@ import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
+import com.lightingorder.Model.Data;
+import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.tableOperation;
@@ -21,9 +24,14 @@ import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
 import com.lightingorder.View.TableActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+
 public class ConnectivityController {   //Singleton
     private static ConnectivityController istanza = null;
-    private static AsyncHttpServer server = new AsyncHttpServer();
+    private final AsyncHttpServer server = new AsyncHttpServer();
 
     private ConnectivityController(){}
     public static synchronized ConnectivityController getConnectivity(){
@@ -45,8 +53,8 @@ public class ConnectivityController {   //Singleton
                 String req = request.getBody().toString();
                 //Create the object using the JSON string
                 loginRequest msg_rcvd = gson.fromJson(req, loginRequest.class);
-                // Add to the Hashmap the user role and the address of the proxy which manage the requests from that role
-                user_contr.addRoleAndProxy(msg_rcvd.result, msg_rcvd.proxySource);
+                //Add role and relative proxy to the user session hashmap
+                user_contr.addRoleAndProxy(msg_rcvd.result,msg_rcvd.proxySource);
                 AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
                     public void run() {
                         Toast t = Toast.makeText(AppStateController.getApplication().getCurrent_activity(), "Ruolo " + msg_rcvd.result + " aggiunto!", Toast.LENGTH_LONG);
@@ -98,11 +106,21 @@ public class ConnectivityController {   //Singleton
                             break;
 
                         case "tableRequest":
-                            String proxy_add = user_contr.getHashRuoli_Proxy().get(user_contr.getCurrentRole());
+
+                            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+                            ArrayList<Table> tables = new ArrayList<Table>();
+                            try {
+                                JSONArray j = new JSONArray(msg_rcvd.response);
+                                for(int i=0; i<j.length(); i++){
+                                    Table single_table = new Table();
+                                    single_table = (Table) gson.fromJson(j.get(i).toString(), Table.class);
+                                    tables.add(single_table);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Data.getData().setTablesList(tables);
                             Intent i = new Intent(AppStateController.getApplication().getCurrent_activity(), TableActivity.class);
-                            i.putExtra("ruolo_corrente", user_contr.getCurrentRole());
-                            i.putExtra("proxy_corrente", proxy_add);
-                            i.putExtra("JSONString_tavoli", msg_rcvd.response);
                             AppStateController.getApplication().getCurrent_activity().startActivity(i);
                             break;
 
@@ -156,8 +174,6 @@ public class ConnectivityController {   //Singleton
             }
         });
 
-
-
     }
 
 
@@ -167,6 +183,7 @@ public class ConnectivityController {   //Singleton
 
 
     static private void sendPost(Context context, String body, String urlDestination){
+
         //POST Request whit String Body
         AsyncHttpRequest req = new AsyncHttpRequest(Uri.parse("http://"+urlDestination), "POST");
         StringBody post_body = new StringBody(body);
@@ -184,10 +201,14 @@ public class ConnectivityController {   //Singleton
                             t.setText("Proxy received your message");
                         else
                            t.setText("There were problems contacting the Proxy");
-                    } else
-                        t.setText("Proxy not reachable");
 
+                        AppStateController.getApplication().setProxyConnectionState(source.code());
+                    } else {
+                        t.setText("Proxy not reachable");
+                        AppStateController.getApplication().setProxyConnectionState(600);// In this case 600 means that an exception has been thrown
+                    }
                     t.show();
+
                 }
             });
         } catch (Exception ex) {
@@ -196,7 +217,6 @@ public class ConnectivityController {   //Singleton
     }
 
     public static void sendLoginRequest(Context ctx, UserSessionController us_contr){
-
         //Body of my request ---> request type = loginRequest
         loginRequest req_body = new loginRequest(
                 us_contr.getUserID(), //user
@@ -210,6 +230,7 @@ public class ConnectivityController {   //Singleton
         Gson gson = new Gson();
         String msg_body = gson.toJson(req_body);
         ConnectivityController.sendPost(ctx, msg_body, StdTerms.proxyLoginAddress);
+
     }
 
     public static void sendTableRequest(Context ctx, UserSessionController us_contr, String proxy_addr){

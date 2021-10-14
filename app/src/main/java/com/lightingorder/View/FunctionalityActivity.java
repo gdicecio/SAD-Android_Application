@@ -23,53 +23,18 @@ import java.util.ArrayList;
 public class FunctionalityActivity extends AppCompatActivity {
 
     ListView lv_function;
-    ArrayList<Functionality> funs;
     UserSessionController user_contr = new UserSessionController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.roles_selection);
-        funs = new ArrayList<Functionality>();
-
-        for(String r : user_contr.getHashRuoli_Proxy().keySet()){
-
-            if(r.equals(StdTerms.roles.Bar.name())){
-
-                funs.add(new Functionality("Visualizza Oridnazioni Bar",
-                                            Color.GREEN,
-                                            StdTerms.useCases.VisualizzaOrdinazioniBar.name()));
-
-            } else if (r.equals(StdTerms.roles.Accoglienza.name())){
-
-                funs.add(new Functionality("Aggiorna Stato Tavolo",
-                                            Color.BLUE,
-                                            StdTerms.useCases.AggiornaStatoTavolo.name()));
-
-            } else if (r.equals(StdTerms.roles.Cameriere.name())){
-
-                funs.add(new Functionality("Crea Ordinazione",
-                                            Color.WHITE,
-                                            StdTerms.useCases.CreaOrdinazione.name()));
-
-            } else if (r.equals(StdTerms.roles.Cucina.name())){
-
-                funs.add(new Functionality("Visualizza Ordinazioni Cucina",
-                                                Color.DKGRAY,
-                                                StdTerms.useCases.VisualizzaOrdinazioniCucina.name()));
-
-            } else if (r.equals(StdTerms.roles.Forno.name())){
-
-                funs.add(new Functionality("Visualizza Ordinazioni Forno",
-                                            Color.YELLOW,
-                                            StdTerms.useCases.VisualizzaOrdinazioniForno.name()));
-            }
-        }
-
+        ArrayList<Functionality> funs = user_contr.determineFunctionality();
 
         FunctionalityAdapter adapter = new FunctionalityAdapter(this, funs);
         lv_function = (ListView) findViewById(R.id.function_list);
         lv_function.setAdapter(adapter);
+
 
         lv_function.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,7 +45,7 @@ public class FunctionalityActivity extends AppCompatActivity {
                 //Retrieve the ID of the Functionality ==> Use case name
                 String use_case =  f.getID();
 
-                //Retrieve the role needed for this use case
+                //Retrieve the role needed for this use case --> it'll be necessary for TableActivity
                 user_contr.setCurrentRole(StdTerms.UC_Role.get(use_case));
 
                 //Retrieve the relative proxy address

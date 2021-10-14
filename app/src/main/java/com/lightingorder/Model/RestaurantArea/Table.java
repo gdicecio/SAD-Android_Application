@@ -20,7 +20,7 @@ public class Table {
     @Expose(serialize=true,deserialize=true)
     private int tableRoomNumber;
 
-    @Expose(serialize=false,deserialize=false)
+    @Expose(serialize=true,deserialize=true)
     public List<Order> orders = new ArrayList<Order>();
 
     public Table(){};
@@ -33,23 +33,6 @@ public class Table {
 
     public String getTableState() {
         return tableState;
-    }
-
-    public void setOrderFromJson(String orders_json){
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String temp = null;
-        try {
-            JSONArray j = new JSONArray(orders_json);
-            for(int i=0; i<j.length(); i++){
-                Order o = new Order();
-                o = (Order) gson.fromJson(j.get(i).toString(), Order.class);
-                //String ordered_item = j.getJSONObject(i).get("orderedItems").toString();
-                //o.setOrderedItemFromJson(ordered_items);
-                this.orders.add(o);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setTableState(String tableState) {
