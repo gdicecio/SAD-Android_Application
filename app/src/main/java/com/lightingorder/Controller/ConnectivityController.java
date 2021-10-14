@@ -93,7 +93,20 @@ public class ConnectivityController {   //Singleton
                             break;
 
                         case "freeTableRequest":
+                            tableOperation free_msg = gson.fromJson(req, tableOperation.class);
+                            Data.getData().updateTableState(free_msg.tableID,
+                                                            free_msg.tableRoomNumber,
+                                                            StdTerms.statesList.free.name());
+
+                            txt_to_show = "Table state updated";
+                            break;
+
                         case "userWaitingForOrderRequest":
+                            tableOperation usr_wait_msg = gson.fromJson(req, tableOperation.class);
+                            Data.getData().updateTableState(usr_wait_msg.tableID,
+                                                            usr_wait_msg.tableRoomNumber,
+                                                            StdTerms.statesList.waitingForOrders.name());
+
                             txt_to_show = "Table state updated";
                             break;
 
@@ -106,7 +119,6 @@ public class ConnectivityController {   //Singleton
                             break;
 
                         case "tableRequest":
-
                             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                             ArrayList<Table> tables = new ArrayList<Table>();
                             try {

@@ -1,6 +1,8 @@
 package com.lightingorder.View;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lightingorder.Controller.AppStateController;
+import com.lightingorder.Controller.ConnectivityController;
 import com.lightingorder.Controller.UserSessionController;
 import com.lightingorder.Model.Data;
 import com.lightingorder.R;
@@ -56,7 +59,7 @@ public class TableActivity extends AppCompatActivity {
                     //TODO mostra la lista degli ordini del tavolo e nell'activity (SOLO SE il tavolo è occupato/in attesa).
                 }
                 else if(user_contr.getCurrentRole().equals(StdTerms.roles.Accoglienza.name())) {
-                    createNewContactDialog(user_contr.getCurrentRole(),user_contr.getCurrentProxy(),tab.tableID,tab.tableState);
+                    createNewContactDialog(tab.getTableID(),tab.getTableRoomNumber(),tab.getTableState());
                 }
             }
         });
@@ -64,7 +67,7 @@ public class TableActivity extends AppCompatActivity {
 
 
     //pop-up
-    private void createNewContactDialog(String role, String proxy_addr, String tableID, String currentTableState){
+    private void createNewContactDialog(String tableID, int tableRoom, String currentTableState){
         dialogBuilder = new AlertDialog.Builder(this);
         final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
         operationsAvlbl = new ArrayList<StateOp>();
@@ -73,11 +76,10 @@ public class TableActivity extends AppCompatActivity {
             operationsAvlbl.add(new StateOp("Riserva tavolo", StdTerms.blue, StdTerms.statesList.reserved.name()));
             operationsAvlbl.add(new StateOp("Occupa tavolo", StdTerms.red, StdTerms.statesList.Occupied.name()));
         }
-        else if(currentTableState.equals(StdTerms.statesList.Occupied.name()) ){
+        else if(currentTableState.equals(StdTerms.statesList.Occupied.name()) ||
+                currentTableState.equals(StdTerms.statesList.waitingForOrders.name())){
             operationsAvlbl.add(new StateOp("Libera tavolo", StdTerms.green, StdTerms.statesList.free.name()));
         }
-
-
 
         StateAdapter adapter = new StateAdapter(this, operationsAvlbl);
         lv_states = (ListView) contactPopupView.findViewById(R.id.states_list);
@@ -91,8 +93,21 @@ public class TableActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 StateOp s = operationsAvlbl.get(position);
-
+                ConnectivityController.sendTableOperationRequest(getApplicationContext(),user_contr,
+                        user_contr.getCurrentProxy(),tableID,tableRoom,s.getID());
                 dialog.dismiss();
+
+                new CountDownTimer(1000, 1000) {
+                    public void onFinish() {
+                        // When timer is finished // Execute your code here
+                        finish();
+                        startActivity(getIntent());
+                    }
+                    public void onTick(long millisUntilFinished) {
+                        // millisUntilFinished    The amount of time until finished.
+                    }
+                }.start();
+
             }
         });
     }
@@ -101,6 +116,9 @@ public class TableActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
+        ArrayList<Table> tables = Data.getData().getTablesList();
+        TablesAdapter tab_adap = new TablesAdapter(this, tables);
+        tables_view.setAdapter(tab_adap);
     }
 
 }

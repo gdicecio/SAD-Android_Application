@@ -12,16 +12,16 @@ import java.util.List;
 
 public class Table {
     @Expose(serialize=true,deserialize=true)
-    public String tableID;
+    private String tableID;
 
     @Expose(serialize=true,deserialize=true)
-    public String tableState;
+    private String tableState;
 
     @Expose(serialize=true,deserialize=true)
     private int tableRoomNumber;
 
     @Expose(serialize=true,deserialize=true)
-    public List<Order> orders = new ArrayList<Order>();
+    private List<Order> orders = new ArrayList<Order>();
 
     public Table(){};
 
@@ -46,6 +46,11 @@ public class Table {
     public void setTableID(String tableID) {
         this.tableID = tableID;
     }
+
+
+    public int getTableRoomNumber() {return tableRoomNumber;}
+
+    public void setTableRoomNumber(int tableRoomNumber) {this.tableRoomNumber = tableRoomNumber;}
 
     public String getText(){
         return this.tableID;

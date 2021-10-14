@@ -27,6 +27,18 @@ public class Data {
 
     public void setOrdersList(ArrayList<Order> ordersList) {istanza.ordersList = ordersList;}
 
+    public void updateTableState(String tableID, int roomNumber, String new_state){
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
+                find = true;
+                istanza.tablesList.get(i).setTableState(new_state);
+            }
+            i = i + 1;
+        }
+    }
+
 
 
 

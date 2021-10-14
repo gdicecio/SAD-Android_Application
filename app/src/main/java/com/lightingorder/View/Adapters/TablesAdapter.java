@@ -45,7 +45,7 @@ public class TablesAdapter extends ArrayAdapter<Table>{
             TextView iconText = (TextView) view.findViewById(R.id.icon);
 
             iconText.setText(tab.getIdAndState());
-            iconText.setBackgroundColor(color.get(tab.tableState));
+            iconText.setBackgroundColor(color.get(tab.getTableState()));
 
             return view;
         }
