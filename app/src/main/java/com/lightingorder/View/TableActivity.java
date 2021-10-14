@@ -53,7 +53,7 @@ public class TableActivity extends AppCompatActivity {
         try {
             JSONArray j = new JSONArray(JSONtables);
             for(int i=0; i<j.length(); i++){
-                Table single_table = gson.fromJson(j.getString(i), Table.class);
+                Table single_table = gson.fromJson(j.get(i).toString(), Table.class);
              //   String order_json = j.getJSONObject(i).get("orders").toString();
              //   single_table.setOrderFromJson(order_json);
                 tables.add(single_table);

@@ -15,9 +15,7 @@ public class UserSessionController {
         utente.addRole(role,proxy_address);
     }
 
-    public void setUserID(String ID){
-        utente.setID(ID);
-    }
+    public void setUserID(String ID){ utente.setID(ID);}
 
     public void setUserIpAddress(String IP){
         utente.setIpAddress(IP);

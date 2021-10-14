@@ -16,6 +16,9 @@ public class Order {
     @Expose(serialize=true,deserialize=true)
     private String userID;
 
+    //@Expose(serialize=false,deserialize=false)
+    //private List<OrderedItem> orderedItems;
+
     public int getOrderID() {
         return orderID;
     }
