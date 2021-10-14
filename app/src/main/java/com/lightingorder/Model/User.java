@@ -4,6 +4,7 @@ import com.lightingorder.Controller.ConnectivityController;
 
 import java.util.HashMap;
 
+//Singleton
 public class User {
     private static User istanza = null;
     private  String ID;

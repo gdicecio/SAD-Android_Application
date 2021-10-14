@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.lightingorder.Model.Table;
+import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.R;
 import com.lightingorder.StdTerms;
 
@@ -45,7 +45,7 @@ public class TablesAdapter extends ArrayAdapter<Table>{
             TextView iconText = (TextView) view.findViewById(R.id.icon);
 
             iconText.setText(tab.getIdAndState());
-            iconText.setBackgroundColor(color.get(tab.actualState));
+            iconText.setBackgroundColor(color.get(tab.tableState));
 
             return view;
         }

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpRequest;
 import com.koushikdutta.async.http.AsyncHttpResponse;
@@ -15,19 +14,12 @@ import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
-import com.lightingorder.Model.Table;
 import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
-import com.lightingorder.View.FunctionalityActivity;
 import com.lightingorder.View.TableActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
 
 public class ConnectivityController {   //Singleton
     private static ConnectivityController istanza = null;

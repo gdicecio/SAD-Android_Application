@@ -10,14 +10,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
-import com.lightingorder.Controller.ConnectivityController;
+import com.google.gson.GsonBuilder;
 import com.lightingorder.Controller.AppStateController;
 import com.lightingorder.Controller.UserSessionController;
 import com.lightingorder.R;
 import com.lightingorder.StdTerms;
 import com.lightingorder.Model.StateOp;
 import com.lightingorder.View.Adapters.StateAdapter;
-import com.lightingorder.Model.Table;
+import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.View.Adapters.TablesAdapter;
 
 import org.json.JSONArray;
@@ -48,16 +48,20 @@ public class TableActivity extends AppCompatActivity {
         /*TODO
             * Aggiunta tavoli alla gridview
         */
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         ArrayList<Table> tables = new ArrayList<Table>();
         try {
             JSONArray j = new JSONArray(JSONtables);
             for(int i=0; i<j.length(); i++){
-                tables.add(gson.fromJson(j.getString(i), Table.class));
+                Table single_table = gson.fromJson(j.getString(i), Table.class);
+             //   String order_json = j.getJSONObject(i).get("orders").toString();
+             //   single_table.setOrderFromJson(order_json);
+                tables.add(single_table);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
 
 
       /*  tables.add(new Table("1", "free"));
@@ -83,7 +87,7 @@ public class TableActivity extends AppCompatActivity {
                     //TODO mostra la lista degli ordini del tavolo e nell'activity (SOLO SE il tavolo è occupato/in attesa).
                 }
                 else if(role.equals(StdTerms.roles.Accoglienza.name())) {
-                    createNewContactDialog(role,proxy_addr,tab.tableID,tab.actualState);
+                    createNewContactDialog(role,proxy_addr,tab.tableID,tab.tableState);
                 }
             }
         });
