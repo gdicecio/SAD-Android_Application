@@ -1,5 +1,7 @@
 package com.lightingorder.Model;
 
+import com.lightingorder.Model.MenuAndWareHouseArea.Goods;
+import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
 import com.lightingorder.Model.RestaurantArea.Order;
 import com.lightingorder.Model.RestaurantArea.Table;
 
@@ -10,7 +12,8 @@ public class Data {
     private static Data istanza = null;
     private ArrayList<Table> tablesList = new ArrayList<>();
     private ArrayList<Order> ordersList = new ArrayList<>();
-
+    private ArrayList<MenuItem> menuList = new ArrayList<>();
+    private ArrayList<Goods> goodsList = new ArrayList<>();
 
     private Data(){}
     public static synchronized Data getData(){

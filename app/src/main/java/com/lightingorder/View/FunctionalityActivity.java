@@ -64,7 +64,7 @@ public class FunctionalityActivity extends AppCompatActivity {
                 }
             }
         });
-
+        backgroundUpdateModel();
     }
 
 
@@ -72,5 +72,13 @@ public class FunctionalityActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
+    }
+
+    private void backgroundUpdateModel(){
+        if(user_contr.checkRole(StdTerms.roles.Cameriere.name())){
+            ConnectivityController.sendMenuRequest(this,
+                    user_contr,
+                    user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
+        }
     }
 }

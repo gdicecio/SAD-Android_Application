@@ -31,7 +31,7 @@ public class User {
         istanza.ID = ID;
     }
 
-    public boolean checkRole(String role){ 
+    public boolean checkRole(String role){
         return istanza.getRuoli_proxy().containsKey(role);
     }
 

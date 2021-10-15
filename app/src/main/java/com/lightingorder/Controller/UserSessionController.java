@@ -34,6 +34,10 @@ public class UserSessionController {
         return utente.getIpAddress();
     }
 
+    public boolean checkRole(String role){
+        return utente.checkRole(role);
+    }
+
     public HashMap<String,String> getHashRuoli_Proxy(){
         return utente.getRuoli_proxy();
     }

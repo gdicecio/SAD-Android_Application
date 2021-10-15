@@ -19,6 +19,7 @@ import com.lightingorder.Model.Data;
 import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
+import com.lightingorder.Model.messages.menuRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
@@ -247,7 +248,17 @@ public class ConnectivityController {   //Singleton
     }
 
     public static void sendMenuRequest(Context ctx, UserSessionController us_contr, String proxy_addr){
-
+        menuRequest req_body = new menuRequest(
+                us_contr.getUserID(),
+                "",
+                StdTerms.messages.menuRequest.name(),
+                "",
+                "",
+                false,
+                "" );
+        Gson gson = new Gson();
+        String msg_body = gson.toJson(req_body);
+        ConnectivityController.sendPost(ctx, msg_body, proxy_addr);
     }
 
     public static void sendTableRequest(Context ctx, UserSessionController us_contr, String proxy_addr){

@@ -21,7 +21,7 @@ public class MenuItem {
     protected double price;
     private boolean inStock;
     protected String area;
-    protected List<String> goods;
+    protected List<String> goodsID;
 
     /**
      * Constructor for ordered item
@@ -31,7 +31,7 @@ public class MenuItem {
     protected MenuItem(MenuItem item) {
         this.name=item.name;
         this.price=item.price;
-        this.goods=new ArrayList<String>();
+        this.goodsID=new ArrayList<String>();
         this.area=item.area;
     }
 
