@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
 
         user_contr.setUserIpAddress(ipAddress+":"+(StdTerms.server_port));
-        //user_contr.setUserIpAddress("192.168.42.129:5000");
+        user_contr.setUserIpAddress("192.168.42.129:5000");
         //user_contr.setUserIpAddress("192.168.1.130:5000");
 
         ConnectivityController.sendLoginRequest(getApplicationContext(),user_contr);

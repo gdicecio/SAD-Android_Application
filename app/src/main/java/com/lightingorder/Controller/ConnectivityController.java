@@ -167,7 +167,8 @@ public class ConnectivityController {   //Singleton
 
                 if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
                     switch (message_type) {
-                        case "ok":
+                        case "menuRequest":
+
                         default:
 
                     }
@@ -242,6 +243,10 @@ public class ConnectivityController {   //Singleton
         Gson gson = new Gson();
         String msg_body = gson.toJson(req_body);
         ConnectivityController.sendPost(ctx, msg_body, StdTerms.proxyLoginAddress);
+
+    }
+
+    public static void sendMenuRequest(Context ctx, UserSessionController us_contr, String proxy_addr){
 
     }
 

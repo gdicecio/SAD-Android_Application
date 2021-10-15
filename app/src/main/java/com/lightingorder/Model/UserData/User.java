@@ -1,4 +1,4 @@
-package com.lightingorder.Model;
+package com.lightingorder.Model.UserData;
 
 import java.util.HashMap;
 
@@ -29,6 +29,10 @@ public class User {
 
     public  void setID(String ID) {
         istanza.ID = ID;
+    }
+
+    public boolean checkRole(String role){ 
+        return istanza.getRuoli_proxy().containsKey(role);
     }
 
     public  HashMap<String, String> getRuoli_proxy() {

@@ -30,6 +30,10 @@
         <activity
             android:name=".View.TableActivity" >
         </activity>
+
+        <activity
+            android:name=".View.OrderActivity" >
+        </activity>
     </application>
 
 </manifest>

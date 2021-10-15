@@ -3,12 +3,11 @@ package com.lightingorder.Controller;
 import android.graphics.Color;
 
 import com.lightingorder.Model.Functionality;
-import com.lightingorder.Model.User;
+import com.lightingorder.Model.UserData.User;
 import com.lightingorder.StdTerms;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Function;
 
 public class UserSessionController {
     private User utente;

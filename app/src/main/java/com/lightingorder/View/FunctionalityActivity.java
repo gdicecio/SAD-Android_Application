@@ -64,6 +64,7 @@ public class FunctionalityActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
 

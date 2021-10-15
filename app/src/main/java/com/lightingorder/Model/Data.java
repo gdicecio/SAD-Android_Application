@@ -5,6 +5,7 @@ import com.lightingorder.Model.RestaurantArea.Table;
 
 import java.util.ArrayList;
 
+//Singleton
 public class Data {
     private static Data istanza = null;
     private ArrayList<Table> tablesList = new ArrayList<>();
