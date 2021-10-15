@@ -16,6 +16,7 @@ import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 import com.lightingorder.Model.Data;
+import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
 import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
@@ -169,7 +170,19 @@ public class ConnectivityController {   //Singleton
                 if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
                     switch (message_type) {
                         case "menuRequest":
-
+                            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+                            ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
+                            try {
+                                JSONArray j = new JSONArray(msg_rcvd.response);
+                                for(int i=0; i<j.length(); i++){
+                                    MenuItem single_item = new MenuItem();
+                                    single_item = (MenuItem) gson.fromJson(j.get(i).toString(), MenuItem.class);
+                                    menu.add(single_item);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Data.getData().setMenuList(menu);
                         default:
 
                     }

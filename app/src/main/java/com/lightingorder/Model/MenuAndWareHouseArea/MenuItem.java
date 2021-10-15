@@ -1,6 +1,8 @@
 package com.lightingorder.Model.MenuAndWareHouseArea;
 
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,17 +18,27 @@ import java.util.List;
  * */
 public class MenuItem {
 
+    @Expose
     private String description;
+    @Expose
     protected String name;
+    @Expose
     protected double price;
+    @Expose
     private boolean inStock;
+    @Expose
     protected String area;
+    @Expose
     protected List<String> goodsID;
 
     /**
      * Constructor for ordered item
      * @param item
      */
+
+    public MenuItem(){
+
+    }
 
     protected MenuItem(MenuItem item) {
         this.name=item.name;

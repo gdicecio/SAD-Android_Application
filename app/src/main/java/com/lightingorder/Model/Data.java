@@ -1,5 +1,7 @@
 package com.lightingorder.Model;
 
+import android.view.Menu;
+
 import com.lightingorder.Model.MenuAndWareHouseArea.Goods;
 import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
 import com.lightingorder.Model.RestaurantArea.Order;
@@ -27,9 +29,13 @@ public class Data {
 
     public ArrayList<Order> getOrdersList() {return istanza.ordersList;}
 
+    public ArrayList<MenuItem> getMenuList(){ return istanza.menuList; }
+
     public void setTablesList(ArrayList<Table> tablesList) {istanza.tablesList = tablesList;}
 
     public void setOrdersList(ArrayList<Order> ordersList) {istanza.ordersList = ordersList;}
+
+    public void setMenuList(ArrayList<MenuItem> menuList){ istanza.menuList = menuList; }
 
     public void updateTableState(String tableID, int roomNumber, String new_state){
         boolean find = false;
