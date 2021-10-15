@@ -1,11 +1,6 @@
 package com.lightingorder.Model.RestaurantArea;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +42,21 @@ public class Table {
         this.tableID = tableID;
     }
 
+    public List<Order> getOrderList(){return this.orders;}
+
+    public void addOrderToTable(Order new_order){this.orders.add(new_order);}
+
+    public void removeOrderFromTable(int orderID){
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(this.orders.get(i).getOrderID() == orderID) {
+                find = true;
+                this.orders.remove(i);
+            }
+            i = i + 1;
+        }
+    }
 
     public int getTableRoomNumber() {return tableRoomNumber;}
 

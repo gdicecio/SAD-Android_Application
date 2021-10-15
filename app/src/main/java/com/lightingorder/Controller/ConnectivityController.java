@@ -17,10 +17,12 @@ import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 import com.lightingorder.Model.Data;
 import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
+import com.lightingorder.Model.RestaurantArea.Order;
 import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.menuRequest;
+import com.lightingorder.Model.messages.orderRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
@@ -78,6 +80,7 @@ public class ConnectivityController {   //Singleton
                 //Create the object using the JSON string
                 baseMessage msg_rcvd = gson.fromJson(req, baseMessage.class);
                 String message_type  = msg_rcvd.messageName;
+                Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 String txt_to_show = "";
 
                 if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
@@ -121,7 +124,6 @@ public class ConnectivityController {   //Singleton
                             break;
 
                         case "tableRequest":
-                            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                             ArrayList<Table> tables = new ArrayList<Table>();
                             try {
                                 JSONArray j = new JSONArray(msg_rcvd.response);
@@ -136,6 +138,39 @@ public class ConnectivityController {   //Singleton
                             Data.getData().setTablesList(tables);
                             Intent i = new Intent(AppStateController.getApplication().getCurrent_activity(), TableActivity.class);
                             AppStateController.getApplication().getCurrent_activity().startActivity(i);
+                            txt_to_show = "Table list updated";
+                            break;
+
+                        case "menuRequest":
+                            ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
+                            try {
+                                JSONArray j = new JSONArray(msg_rcvd.response);
+                                for(int k=0; k<j.length(); k++){
+                                    MenuItem single_item = new MenuItem();
+                                    single_item = (MenuItem) gson.fromJson(j.get(k).toString(), MenuItem.class);
+                                    menu.add(single_item);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Data.getData().setMenuList(menu);
+                            txt_to_show = "Menu list updated";
+                            break;
+
+                        case "orderRequest":
+                            ArrayList<Order> orders = new ArrayList<Order>();
+                            try {
+                                JSONArray j = new JSONArray(msg_rcvd.response);
+                                for(int k=0; k<j.length(); k++){
+                                    Order single_order = new Order();
+                                    single_order = (Order) gson.fromJson(j.get(k).toString(), Order.class);
+                                    orders.add(single_order);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Data.getData().setOrdersList(orders);
+                            txt_to_show = "Order list updated";
                             break;
 
                         default:
@@ -168,24 +203,8 @@ public class ConnectivityController {   //Singleton
                 String message_type  = msg_rcvd.messageName;
 
                 if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
-                    switch (message_type) {
-                        case "menuRequest":
-                            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-                            ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
-                            try {
-                                JSONArray j = new JSONArray(msg_rcvd.response);
-                                for(int i=0; i<j.length(); i++){
-                                    MenuItem single_item = new MenuItem();
-                                    single_item = (MenuItem) gson.fromJson(j.get(i).toString(), MenuItem.class);
-                                    menu.add(single_item);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Data.getData().setMenuList(menu);
-                        default:
 
-                    }
+
                 }
                 else {}
 
@@ -315,6 +334,24 @@ public class ConnectivityController {   //Singleton
                 "",
                 tableID,
                 tableRoom);
+        String msg_body = gson.toJson(req_body);
+        ConnectivityController.sendPost(ctx, msg_body,proxy_addr);
+    }
+
+
+    public static void sendOrderRequest(Context ctx,UserSessionController us_contr, String proxy_addr){
+
+        String area = us_contr.getCurrentRole();
+
+        Gson gson = new Gson();
+        orderRequest req_body = new orderRequest(
+                us_contr.getUserID(),
+                proxy_addr,
+                "orderRequest",
+                "",
+                "",
+                true,
+                area);
         String msg_body = gson.toJson(req_body);
         ConnectivityController.sendPost(ctx, msg_body,proxy_addr);
     }

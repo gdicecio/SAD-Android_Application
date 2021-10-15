@@ -56,6 +56,7 @@ public class TableActivity extends AppCompatActivity {
                 Table tab = tables.get(position);
 
                 if (user_contr.getCurrentRole().equals(StdTerms.roles.Cameriere.name())) {
+
                     //TODO mostra la lista degli ordini del tavolo e nell'activity (SOLO SE il tavolo è occupato/in attesa).
                 }
                 else if(user_contr.getCurrentRole().equals(StdTerms.roles.Accoglienza.name())) {

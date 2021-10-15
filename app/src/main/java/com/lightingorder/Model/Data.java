@@ -17,6 +17,7 @@ public class Data {
     private ArrayList<MenuItem> menuList = new ArrayList<>();
     private ArrayList<Goods> goodsList = new ArrayList<>();
 
+
     private Data(){}
     public static synchronized Data getData(){
         if(istanza == null){
@@ -37,6 +38,7 @@ public class Data {
 
     public void setMenuList(ArrayList<MenuItem> menuList){ istanza.menuList = menuList; }
 
+
     public void updateTableState(String tableID, int roomNumber, String new_state){
         boolean find = false;
         int i = 0;
@@ -50,6 +52,44 @@ public class Data {
     }
 
 
+    public void getTableOrders(String tableID, int roomNumber){
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
+                find = true;
+                istanza.tablesList.get(i).getOrderList();
+            }
+            i = i + 1;
+        }
+    }
+
+    public void addOrderToTable(String tableID, int roomNumber, Order new_order){
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
+                find = true;
+                istanza.tablesList.get(i).addOrderToTable(new_order);
+            }
+            i = i + 1;
+        }
+        //aggiunta dell'ordine anche alla lista di ordini
+        this.ordersList.add(new_order);
+    }
+
+
+    public void deleteOrderFromList(int orderID){
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(istanza.ordersList.get(i).getOrderID() == orderID) {
+                find = true;
+                istanza.ordersList.remove(i);
+            }
+            i = i + 1;
+        }
+    }
 
 
 

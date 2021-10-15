@@ -15,7 +15,8 @@ public class StdTerms {
     public static final int orange = Color.rgb(255, 102, 0);
     public static final int purple = Color.rgb(102, 0, 204);
 
-    public static final String proxyLoginAddress = "192.168.42.130:8085/loginSend";
+    //public static final String proxyLoginAddress = "192.168.42.130:8085/loginSend";
+    public static final String proxyLoginAddress = "192.168.1.115:8085/loginSend";
     public static final int server_port = 5000;
 
     static final public Map<String, String> UC_Role;
@@ -68,4 +69,5 @@ public class StdTerms {
         loginRequest,
         registerNotification
     }
+
 }

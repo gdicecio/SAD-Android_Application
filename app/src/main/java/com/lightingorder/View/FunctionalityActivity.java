@@ -49,18 +49,19 @@ public class FunctionalityActivity extends AppCompatActivity {
                 user_contr.setCurrentRole(StdTerms.UC_Role.get(use_case));
 
                 //Retrieve the relative proxy address
-                String proxy_add = user_contr.getHashRuoli_Proxy().get(user_contr.getCurrentRole());
+                String proxy_addr = user_contr.getHashRuoli_Proxy().get(user_contr.getCurrentRole());
 
                 if(use_case.equals(StdTerms.useCases.CreaOrdinazione.name()) ||
                         use_case.equals(StdTerms.useCases.AggiornaStatoTavolo.name())) {
-                    ConnectivityController.sendTableRequest(getApplicationContext(),user_contr,proxy_add);
+                    ConnectivityController.sendTableRequest(getApplicationContext(),user_contr,proxy_addr);
+                    //Navigate to TableActivity when the response from the main system arrives
 
                 }
                 else if(use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniBar.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniCucina.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniForno.name()) ){
+                    ConnectivityController.sendOrderRequest(getApplicationContext(),user_contr,proxy_addr);
                     //TODO Aggiungere activty per realizzatori
-
                 }
             }
         });
