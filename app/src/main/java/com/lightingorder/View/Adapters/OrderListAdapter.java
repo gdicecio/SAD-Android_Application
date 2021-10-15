@@ -18,7 +18,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
     public Activity context;
 
     public OrderListAdapter(Activity context, ArrayList<Order> list){
-        super(context, R.layout.item_list_order);
+        super(context, R.layout.item_list_order, list);
         this.context = context;
     }
 
@@ -33,15 +33,18 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         TextView state = (TextView) view.findViewById(R.id.state_order);
 
         String product_list = "";
+        int k=0;
         for(OrderedItem i : local_order.getOrderedItems()){
             product_list += i.getItem();
-            product_list += " - ";
+            k += 1;
+            if(k != local_order.getOrderedItems().size())
+                product_list += "\n";
         }
 
-        order_id.setText(local_order.getOrderID());
+        order_id.setText(Integer.toString(local_order.getOrderID()));
         user_id.setText(local_order.getUserID());
         products.setText(product_list);
-        state.setText(local_order.getOrderState());
+        state.setText(local_order.getOrderState()+"\n");
 
         return view;
     }

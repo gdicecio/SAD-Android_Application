@@ -35,7 +35,6 @@ public class FunctionalityActivity extends AppCompatActivity {
         lv_function = (ListView) findViewById(R.id.function_list);
         lv_function.setAdapter(adapter);
 
-
         lv_function.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -61,7 +60,7 @@ public class FunctionalityActivity extends AppCompatActivity {
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniCucina.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniForno.name()) ){
                     ConnectivityController.sendOrderRequest(getApplicationContext(),user_contr,proxy_addr);
-                    //TODO Aggiungere activty per realizzatori
+
                 }
             }
         });

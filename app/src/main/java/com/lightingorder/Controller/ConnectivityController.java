@@ -23,6 +23,7 @@ import com.lightingorder.Model.messages.baseMessage;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.menuRequest;
 import com.lightingorder.Model.messages.orderRequest;
+import com.lightingorder.Model.messages.orderToTableGenerationRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
@@ -32,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectivityController {   //Singleton
     private static ConnectivityController istanza = null;
@@ -86,15 +88,34 @@ public class ConnectivityController {   //Singleton
                 if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
                     switch (message_type) {
                         case "cancelOrderedItemRequest":
+                            sendTableRequest(AppStateController.getApplication().getCurrent_activity(),
+                                    user_contr,
+                                    user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
                             txt_to_show = "Product removed from the order";
                             break;
 
                         case "cancelOrderRequest":
+                            sendTableRequest(AppStateController.getApplication().getCurrent_activity(),
+                                    user_contr,
+                                    user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
                             txt_to_show = "Order removed";
                             break;
 
                         case "orderToTableGenerationRequest":
+                            sendTableRequest(AppStateController.getApplication().getCurrent_activity(),
+                                    user_contr,
+                                    user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
                             txt_to_show = "Order added";
+                            break;
+
+                        case "itemCompleteRequest":
+                            //TODO
+                            txt_to_show = "Action registered";
+                            break;
+
+                        case "itemWorkingRequest":
+                            //TODO
+                            txt_to_show = "Request accepted";
                             break;
 
                         case "freeTableRequest":
@@ -102,7 +123,6 @@ public class ConnectivityController {   //Singleton
                             Data.getData().updateTableState(free_msg.tableID,
                                                             free_msg.tableRoomNumber,
                                                             StdTerms.statesList.free.name());
-
                             txt_to_show = "Table state updated";
                             break;
 
@@ -111,16 +131,7 @@ public class ConnectivityController {   //Singleton
                             Data.getData().updateTableState(usr_wait_msg.tableID,
                                                             usr_wait_msg.tableRoomNumber,
                                                             StdTerms.statesList.waitingForOrders.name());
-
                             txt_to_show = "Table state updated";
-                            break;
-
-                        case "itemCompleteRequest":
-                            txt_to_show = "Action registered";
-                            break;
-
-                        case "itemWorkingRequest":
-                            txt_to_show = "Request accepted";
                             break;
 
                         case "tableRequest":
@@ -171,6 +182,7 @@ public class ConnectivityController {   //Singleton
                                 e.printStackTrace();
                             }
                             Data.getData().setOrdersList(orders);
+                            //TODO vai alla schermata per realizzatori
                             txt_to_show = "Order list updated";
                             break;
 
@@ -357,4 +369,31 @@ public class ConnectivityController {   //Singleton
         ConnectivityController.sendPost(ctx, msg_body,proxy_addr);
     }
 
+    public static void sendAddOrderToTableRequest(Context ctx, UserSessionController us_contr,
+                                                  String proxy_addr, String tableID, int roomNumber,
+                                                  List<String> items_name,List<List<String>> additive,
+                                                  List<Integer> priority){
+
+
+        orderToTableGenerationRequest.orderParameters param = new orderToTableGenerationRequest.orderParameters(
+                        items_name,
+                        additive,
+                        null,
+                        priority);
+
+
+        Gson gson = new Gson();
+        orderToTableGenerationRequest req_body = new orderToTableGenerationRequest(
+                us_contr.getUserID(),
+                proxy_addr,
+                "orderToTableGenerationRequest",
+                "",
+                "",
+                tableID,
+                roomNumber,
+                param);
+        String msg_body = gson.toJson(req_body);
+        ConnectivityController.sendPost(ctx, msg_body,proxy_addr);
+
+    }
 }

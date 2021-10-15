@@ -64,16 +64,16 @@ public class Data {
         }
     }
 
-    public void getTableOrders(String tableID, int roomNumber){
+    public ArrayList<Order> getTableOrders(String tableID, int roomNumber){
         boolean find = false;
         int i = 0;
         while(!find){
-            if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
+            if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber)
                 find = true;
-                istanza.tablesList.get(i).getOrderList();
-            }
-            i = i + 1;
+            else
+                i = i + 1;
         }
+        return istanza.tablesList.get(i).getOrderList();
     }
 
     public void addOrderToTable(String tableID, int roomNumber, Order new_order){

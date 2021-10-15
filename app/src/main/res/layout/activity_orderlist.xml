@@ -70,8 +70,11 @@
         android:layout_height="577dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:divider="@color/cardview_dark_background"
+        android:dividerHeight="8dp"
         app:layout_constraintBottom_toTopOf="@+id/aggiungi_orderlist"
         app:layout_constraintTop_toBottomOf="@+id/table_number_order_list"
-        tools:layout_editor_absoluteX="1dp" />
+        tools:layout_editor_absoluteX="1dp"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 
 public class orderToTableGenerationRequest extends baseMessage {
 
-	public class orderParameters{
+	public static class orderParameters{
 		@Expose(serialize=true,   deserialize=true)
 		public List<String> itemNames;
 		@Expose(serialize=true, deserialize=true)
