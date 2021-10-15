@@ -57,6 +57,14 @@ public class Order {
         this.completedItemNumber = completedItemNumber;
     }
 
+    public List<OrderedItem> getOrderedItems() {
+        return orderedItems;
+    }
+
+    public void addOrderedItems(OrderedItem new_item) {
+        orderedItems.add(new_item);
+    }
+
     public String getUserID() {
         return userID;
     }

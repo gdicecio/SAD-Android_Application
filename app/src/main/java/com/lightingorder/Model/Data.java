@@ -52,6 +52,18 @@ public class Data {
     }
 
 
+    public void removeOrderFromList(int orderID){
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(istanza.ordersList.get(i).getOrderID() == orderID) {
+                find = true;
+                istanza.ordersList.remove(i);
+            }
+            i = i + 1;
+        }
+    }
+
     public void getTableOrders(String tableID, int roomNumber){
         boolean find = false;
         int i = 0;
@@ -79,20 +91,19 @@ public class Data {
     }
 
 
-    public void deleteOrderFromList(int orderID){
+
+    public void deleteOrderFromTable(String tableID, int roomNumber, int orderID){
         boolean find = false;
         int i = 0;
         while(!find){
-            if(istanza.ordersList.get(i).getOrderID() == orderID) {
+            if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
                 find = true;
-                istanza.ordersList.remove(i);
+                istanza.tablesList.get(i).removeOrderFromTable(orderID);
+                istanza.removeOrderFromList(orderID);
             }
             i = i + 1;
         }
     }
-
-
-
 
 
 }
