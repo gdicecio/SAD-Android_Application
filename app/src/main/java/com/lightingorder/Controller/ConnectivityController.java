@@ -3,6 +3,7 @@ package com.lightingorder.Controller;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -33,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ConnectivityController {   //Singleton
@@ -84,38 +86,45 @@ public class ConnectivityController {   //Singleton
                 String message_type  = msg_rcvd.messageName;
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 String txt_to_show = "";
+                String resp = ""+msg_rcvd.response;
 
-                if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
+                if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound") ||
+                        resp.contains("NotCreated"))) {
                     switch (message_type) {
                         case "cancelOrderedItemRequest":
-                            sendTableRequest(AppStateController.getApplication().getCurrent_activity(),
+                            sendTableRequest(
                                     user_contr,
                                     user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
                             txt_to_show = "Product removed from the order";
+                            Log.d("SERVER","CancelOrderedItemRequest: Product removed from the order");
                             break;
 
                         case "cancelOrderRequest":
-                            sendTableRequest(AppStateController.getApplication().getCurrent_activity(),
+                            sendTableRequest(
                                     user_contr,
                                     user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
                             txt_to_show = "Order removed";
+                            Log.d("SERVER","CancelOrderRequest: Order removed");
                             break;
 
                         case "orderToTableGenerationRequest":
-                            sendTableRequest(AppStateController.getApplication().getCurrent_activity(),
+                            sendTableRequest(
                                     user_contr,
                                     user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
                             txt_to_show = "Order added";
+                            Log.d("SERVER","OrderToTableGenerationRequest: Order added");
                             break;
 
                         case "itemCompleteRequest":
                             //TODO
                             txt_to_show = "Action registered";
+                            Log.d("SERVER","ItemCompleteRequest: Action registred");
                             break;
 
                         case "itemWorkingRequest":
                             //TODO
                             txt_to_show = "Request accepted";
+                            Log.d("SERVER","ItemWorkingRequest: Request accepted");
                             break;
 
                         case "freeTableRequest":
@@ -124,6 +133,7 @@ public class ConnectivityController {   //Singleton
                                                             free_msg.tableRoomNumber,
                                                             StdTerms.statesList.free.name());
                             txt_to_show = "Table state updated";
+                            Log.d("SERVER","FreeTableRequest: Table state updated");
                             break;
 
                         case "userWaitingForOrderRequest":
@@ -132,6 +142,7 @@ public class ConnectivityController {   //Singleton
                                                             usr_wait_msg.tableRoomNumber,
                                                             StdTerms.statesList.waitingForOrders.name());
                             txt_to_show = "Table state updated";
+                            Log.d("SERVER","UserWaitingForOrderRequest: Table state updated");
                             break;
 
                         case "tableRequest":
@@ -150,6 +161,7 @@ public class ConnectivityController {   //Singleton
                             Intent i = new Intent(AppStateController.getApplication().getCurrent_activity(), TableActivity.class);
                             AppStateController.getApplication().getCurrent_activity().startActivity(i);
                             txt_to_show = "Table list updated";
+                            Log.d("SERVER","TableRequest: Table list updated");
                             break;
 
                         case "menuRequest":
@@ -166,6 +178,7 @@ public class ConnectivityController {   //Singleton
                             }
                             Data.getData().setMenuList(menu);
                             txt_to_show = "Menu list updated";
+                            Log.d("SERVER","MenuRequest: Menu list updated");
                             break;
 
 
@@ -188,9 +201,13 @@ public class ConnectivityController {   //Singleton
 
                         default:
                             txt_to_show = "Message not recognized";
+                            Log.e("SERVER","Message not recognized");
                     }
                 }
-                else txt_to_show = "There were problem with the Main System";
+                else{
+                    txt_to_show = "Main System: operation not allowed";
+                    Log.e("SERVER", "Main System : operation not allowed");
+                }
                 String finalTxt_to_show = txt_to_show;
                 AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
                     public void run() {
@@ -241,14 +258,12 @@ public class ConnectivityController {   //Singleton
     }
 
 
-    static private void sendPost(Context context, String body, String urlDestination){
+    static private void sendPost(String body, String urlDestination){
 
         //POST Request whit String Body
         AsyncHttpRequest req = new AsyncHttpRequest(Uri.parse("http://"+urlDestination), "POST");
         StringBody post_body = new StringBody(body);
         req.setBody(post_body);
-
-        Toast t = Toast.makeText(context, "Proxy received your message", Toast.LENGTH_SHORT);
 
         //Send HTTP POST Request
         try {
@@ -257,16 +272,16 @@ public class ConnectivityController {   //Singleton
                 public void onCompleted(Exception e, AsyncHttpResponse source, String result) {
                     if(e == null) {
                         if(source.code() >= 200 && source.code() < 300)
-                            t.setText("Proxy received your message");
+                            Log.d("PROXY","Proxy received your message");
                         else
-                           t.setText("There were problems contacting the Proxy");
+                           Log.d("PROXY","There were problems contacting the Proxy");
 
                         AppStateController.getApplication().setProxyConnectionState(source.code());
                     } else {
-                        t.setText("Proxy not reachable");
+                        Log.d("PROXY","Proxy not reachable");
                         AppStateController.getApplication().setProxyConnectionState(600);// In this case 600 means that an exception has been thrown
                     }
-                    t.show();
+                    //t.show();
 
                 }
             });
@@ -275,7 +290,7 @@ public class ConnectivityController {   //Singleton
         }
     }
 
-    public static void sendLoginRequest(Context ctx, UserSessionController us_contr){
+    public static void sendLoginRequest(UserSessionController us_contr){
         //Body of my request ---> request type = loginRequest
         loginRequest req_body = new loginRequest(
                 us_contr.getUserID(), //user
@@ -288,11 +303,11 @@ public class ConnectivityController {   //Singleton
         //Convert into string and send Post request
         Gson gson = new Gson();
         String msg_body = gson.toJson(req_body);
-        ConnectivityController.sendPost(ctx, msg_body, StdTerms.proxyLoginAddress);
+        ConnectivityController.sendPost(msg_body, StdTerms.proxyLoginAddress);
 
     }
 
-    public static void sendMenuRequest(Context ctx, UserSessionController us_contr, String proxy_addr){
+    public static void sendMenuRequest(UserSessionController us_contr, String proxy_addr){
         menuRequest req_body = new menuRequest(
                 us_contr.getUserID(),
                 "",
@@ -303,10 +318,10 @@ public class ConnectivityController {   //Singleton
                 "" );
         Gson gson = new Gson();
         String msg_body = gson.toJson(req_body);
-        ConnectivityController.sendPost(ctx, msg_body, proxy_addr);
+        ConnectivityController.sendPost(msg_body, proxy_addr);
     }
 
-    public static void sendTableRequest(Context ctx, UserSessionController us_contr, String proxy_addr){
+    public static void sendTableRequest(UserSessionController us_contr, String proxy_addr){
 
         //Body of my request ---> request type = tableRequest
         tableRequest req_body = new tableRequest(
@@ -323,11 +338,11 @@ public class ConnectivityController {   //Singleton
         //Convert into string and send Post request
         Gson gson = new Gson();
         String msg_body = gson.toJson(req_body);
-        ConnectivityController.sendPost(ctx, msg_body, proxy_addr);
+        ConnectivityController.sendPost(msg_body, proxy_addr);
     }
 
 
-    public static void sendTableOperationRequest(Context ctx, UserSessionController us_contr, String proxy_addr,
+    public static void sendTableOperationRequest(UserSessionController us_contr, String proxy_addr,
                                                  String tableID, int tableRoom, String new_state){
 
         String message_name = "";
@@ -348,11 +363,11 @@ public class ConnectivityController {   //Singleton
                 tableID,
                 tableRoom);
         String msg_body = gson.toJson(req_body);
-        ConnectivityController.sendPost(ctx, msg_body,proxy_addr);
+        ConnectivityController.sendPost(msg_body,proxy_addr);
     }
 
 
-    public static void sendOrderRequest(Context ctx,UserSessionController us_contr, String proxy_addr){
+    public static void sendOrderRequest(UserSessionController us_contr, String proxy_addr){
 
         String area = us_contr.getCurrentRole();
 
@@ -366,22 +381,22 @@ public class ConnectivityController {   //Singleton
                 true,
                 area);
         String msg_body = gson.toJson(req_body);
-        ConnectivityController.sendPost(ctx, msg_body,proxy_addr);
+        ConnectivityController.sendPost(msg_body,proxy_addr);
     }
 
-    public static void sendAddOrderToTableRequest(Context ctx, UserSessionController us_contr,
+    public static void sendAddOrderToTableRequest(UserSessionController us_contr,
                                                   String proxy_addr, String tableID, int roomNumber,
                                                   List<String> items_name,List<List<String>> additive,
                                                   List<Integer> priority){
 
+        List<List<String>> sub = Collections.<List<String>>emptyList();
 
         orderToTableGenerationRequest.orderParameters param = new orderToTableGenerationRequest.orderParameters(
                         items_name,
                         additive,
-                        null,
+                        sub,
                         priority);
-
-
+        
         Gson gson = new Gson();
         orderToTableGenerationRequest req_body = new orderToTableGenerationRequest(
                 us_contr.getUserID(),
@@ -393,7 +408,7 @@ public class ConnectivityController {   //Singleton
                 roomNumber,
                 param);
         String msg_body = gson.toJson(req_body);
-        ConnectivityController.sendPost(ctx, msg_body,proxy_addr);
+        ConnectivityController.sendPost(msg_body,proxy_addr);
 
     }
 }

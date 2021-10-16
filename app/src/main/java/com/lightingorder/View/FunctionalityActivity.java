@@ -3,6 +3,7 @@ package com.lightingorder.View;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -46,20 +47,24 @@ public class FunctionalityActivity extends AppCompatActivity {
 
                 //Retrieve the role needed for this use case --> it'll be necessary for TableActivity
                 user_contr.setCurrentRole(StdTerms.UC_Role.get(use_case));
+                Log.d("USER","Current Role: "+user_contr.getCurrentRole());
 
                 //Retrieve the relative proxy address
                 String proxy_addr = user_contr.getHashRuoli_Proxy().get(user_contr.getCurrentRole());
+                Log.d("USER","Current Proxy: "+proxy_addr);
 
                 if(use_case.equals(StdTerms.useCases.CreaOrdinazione.name()) ||
                         use_case.equals(StdTerms.useCases.AggiornaStatoTavolo.name())) {
-                    ConnectivityController.sendTableRequest(getApplicationContext(),user_contr,proxy_addr);
+                    ConnectivityController.sendTableRequest(user_contr,proxy_addr);
+                    Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Table Request request sent");
                     //Navigate to TableActivity when the response from the main system arrives
 
                 }
                 else if(use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniBar.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniCucina.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniForno.name()) ){
-                    ConnectivityController.sendOrderRequest(getApplicationContext(),user_contr,proxy_addr);
+                    ConnectivityController.sendOrderRequest(user_contr,proxy_addr);
+                    Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Order request sent");
 
                 }
             }
@@ -76,9 +81,12 @@ public class FunctionalityActivity extends AppCompatActivity {
 
     private void backgroundUpdateModel(){
         if(user_contr.checkRole(StdTerms.roles.Cameriere.name())){
-            ConnectivityController.sendMenuRequest(this,
+            String proxy_cameriere = user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name());
+
+            ConnectivityController.sendMenuRequest(
                     user_contr,
-                    user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
+                    proxy_cameriere);
+            Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Menù request sent");
         }
     }
 }

@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ed_user_id = (EditText) findViewById(R.id.user_id);
         b_login = (Button) findViewById(R.id.login);
-
         conn_contr.configPostMapping();
         conn_contr.startServer(StdTerms.server_port);
     }
@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
         //user_contr.setUserIpAddress("192.168.42.129:5000");
         //user_contr.setUserIpAddress("192.168.1.130:5000");
 
-        ConnectivityController.sendLoginRequest(getApplicationContext(),user_contr);
+        ConnectivityController.sendLoginRequest(user_contr);
+        Log.d("ACTIVITY","MAIN ACTIVITY: Login request sent");
 
         new CountDownTimer(3000, 1000) {
             public void onFinish() {
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent i = new Intent(getApplicationContext(), FunctionalityActivity.class);
                     startActivity(i);
                 }
+                else Log.d("PROXY","MAIN ACTIVITY: Proxy not reachable");
             }
             public void onTick(long millisUntilFinished) {
                 // millisUntilFinished    The amount of time until finished.

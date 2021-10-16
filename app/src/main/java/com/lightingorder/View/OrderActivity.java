@@ -1,6 +1,7 @@
 package com.lightingorder.View;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import com.lightingorder.Controller.UserSessionController;
 import com.lightingorder.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class OrderActivity extends AppCompatActivity {
@@ -58,18 +60,20 @@ public class OrderActivity extends AppCompatActivity {
         List<String> items = new ArrayList<>();
         items.add(prodotto.getSelectedItem().toString());
 
+        List<List<String>> additive = Collections.<List<String>>emptyList();
+
         List<Integer> priority = new ArrayList<Integer>();
         priority.add(Integer.parseInt(priorita.getText().toString()));
 
         ConnectivityController.sendAddOrderToTableRequest(
-                AppStateController.getApplication().getCurrent_activity(),
                 user_contr,
                 user_contr.getCurrentProxy(),
                 tableID,
                 roomNumber,
                 items,
-                null,
+                additive,
                 priority);
+        Log.d("ACTIVITY","ORDER ACTIVITY: Add order request sent");
     }
 
     @Override

@@ -42,7 +42,7 @@ public class Data {
     public void updateTableState(String tableID, int roomNumber, String new_state){
         boolean find = false;
         int i = 0;
-        while(!find){
+        while(!find && i<istanza.tablesList.size()){
             if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
                 find = true;
                 istanza.tablesList.get(i).setTableState(new_state);

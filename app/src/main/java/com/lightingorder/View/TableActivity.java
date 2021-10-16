@@ -96,7 +96,7 @@ public class TableActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 StateOp s = operationsAvlbl.get(position);
-                ConnectivityController.sendTableOperationRequest(getApplicationContext(),user_contr,
+                ConnectivityController.sendTableOperationRequest(user_contr,
                         user_contr.getCurrentProxy(),tableID,tableRoom,s.getID());
                 dialog.dismiss();
 
@@ -119,9 +119,9 @@ public class TableActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
-        ArrayList<Table> tables = Data.getData().getTablesList();
-        TablesAdapter tab_adap = new TablesAdapter(this, tables);
-        tables_view.setAdapter(tab_adap);
+        //ArrayList<Table> tables = Data.getData().getTablesList();
+        //TablesAdapter tab_adap = new TablesAdapter(this, tables);
+        //tables_view.setAdapter(tab_adap);
     }
 
 }
