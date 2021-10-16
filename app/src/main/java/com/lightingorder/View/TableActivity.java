@@ -100,7 +100,7 @@ public class TableActivity extends AppCompatActivity {
                         user_contr.getCurrentProxy(),tableID,tableRoom,s.getID());
                 dialog.dismiss();
 
-                new CountDownTimer(1000, 1000) {
+               /* new CountDownTimer(1000, 1000) {
                     public void onFinish() {
                         // When timer is finished // Execute your code here
                         finish();
@@ -109,7 +109,7 @@ public class TableActivity extends AppCompatActivity {
                     public void onTick(long millisUntilFinished) {
                         // millisUntilFinished    The amount of time until finished.
                     }
-                }.start();
+                }.start();*/
 
             }
         });

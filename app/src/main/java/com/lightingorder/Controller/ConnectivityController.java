@@ -1,5 +1,6 @@
 package com.lightingorder.Controller;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -85,6 +86,7 @@ public class ConnectivityController {   //Singleton
                 baseMessage msg_rcvd = gson.fromJson(req, baseMessage.class);
                 String message_type  = msg_rcvd.messageName;
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+                Gson gsonReq = new Gson();
                 String txt_to_show = "";
                 String resp = ""+msg_rcvd.response;
 
@@ -128,19 +130,30 @@ public class ConnectivityController {   //Singleton
                             break;
 
                         case "freeTableRequest":
-                            tableOperation free_msg = gson.fromJson(req, tableOperation.class);
+                            tableOperation free_msg = gsonReq.fromJson(req, tableOperation.class);
                             Data.getData().updateTableState(free_msg.tableID,
                                                             free_msg.tableRoomNumber,
                                                             StdTerms.statesList.free.name());
+                            Activity current = AppStateController.getApplication().getCurrent_activity();
+                            if(current.getLocalClassName().equals("View.TableActivity")){
+                                current.finish();
+                                current.startActivity(current.getIntent());
+                            }
                             txt_to_show = "Table state updated";
                             Log.d("SERVER","FreeTableRequest: Table state updated");
                             break;
 
                         case "userWaitingForOrderRequest":
-                            tableOperation usr_wait_msg = gson.fromJson(req, tableOperation.class);
+                            tableOperation usr_wait_msg = gsonReq.fromJson(req, tableOperation.class);
                             Data.getData().updateTableState(usr_wait_msg.tableID,
                                                             usr_wait_msg.tableRoomNumber,
                                                             StdTerms.statesList.waitingForOrders.name());
+
+                            Activity current2 = AppStateController.getApplication().getCurrent_activity();
+                            if(current2.getLocalClassName().equals("View.TableActivity")){
+                                current2.finish();
+                                current2.startActivity(current2.getIntent());
+                            }
                             txt_to_show = "Table state updated";
                             Log.d("SERVER","UserWaitingForOrderRequest: Table state updated");
                             break;
@@ -326,7 +339,7 @@ public class ConnectivityController {   //Singleton
         //Body of my request ---> request type = tableRequest
         tableRequest req_body = new tableRequest(
                 us_contr.getUserID(), //user
-                "",
+                us_contr.getCurrentRole(),
                 StdTerms.messages.tableRequest.name(),  //messageName
                 "",
                 "",
@@ -396,7 +409,7 @@ public class ConnectivityController {   //Singleton
                         additive,
                         sub,
                         priority);
-        
+
         Gson gson = new Gson();
         orderToTableGenerationRequest req_body = new orderToTableGenerationRequest(
                 us_contr.getUserID(),

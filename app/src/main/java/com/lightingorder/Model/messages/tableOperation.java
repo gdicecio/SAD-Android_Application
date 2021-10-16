@@ -1,5 +1,7 @@
 package com.lightingorder.Model.messages;
 
+import com.google.gson.annotations.Expose;
+
 public class tableOperation extends baseMessage{
 	public String tableID;
 	public int tableRoomNumber;
