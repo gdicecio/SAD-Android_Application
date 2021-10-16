@@ -10,12 +10,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Prodotto 3"
-        app:layout_constraintStart_toStartOf="@+id/prodotto"
-        app:layout_constraintTop_toBottomOf="@+id/prodotto2" />
+        android:text="Merce da sottrarre"
+        app:layout_constraintStart_toStartOf="@+id/prodotto_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/additive_spinner" />
 
     <Spinner
-        android:id="@+id/prodotto3"
+        android:id="@+id/subGoods_spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
@@ -29,12 +29,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Prdotto 2"
-        app:layout_constraintStart_toStartOf="@+id/prodotto"
-        app:layout_constraintTop_toBottomOf="@+id/prodotto" />
+        android:text="Merce aggiuntiva"
+        app:layout_constraintStart_toStartOf="@+id/prodotto_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/prodotto_spinner" />
 
     <Spinner
-        android:id="@+id/prodotto2"
+        android:id="@+id/additive_spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
@@ -102,7 +102,7 @@
         app:layout_constraintTop_toBottomOf="@+id/table_number" />
 
     <Spinner
-        android:id="@+id/prodotto"
+        android:id="@+id/prodotto_spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
@@ -116,8 +116,8 @@
         android:layout_height="15dp"
         android:layout_marginTop="20dp"
         android:text="Priorità"
-        app:layout_constraintStart_toStartOf="@+id/prodotto3"
-        app:layout_constraintTop_toBottomOf="@+id/prodotto3" />
+        app:layout_constraintStart_toStartOf="@+id/subGoods_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/subGoods_spinner" />
 
     <EditText
         android:id="@+id/priorita"
@@ -129,13 +129,28 @@
         app:layout_constraintTop_toBottomOf="@+id/label4" />
 
     <Button
-        android:id="@+id/aggiungi"
+        android:id="@+id/aggiungi_ordine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:gravity="center"
         android:onClick="addOrder"
         android:text="Aggiungi Ordine"
-        app:layout_constraintEnd_toEndOf="@+id/prodotto3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/aggiungi_prodotto"
+        app:layout_constraintVertical_bias="0.423" />
+
+    <Button
+        android:id="@+id/aggiungi_prodotto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:onClick="addItem"
+        android:text="Aggiungi Prodotto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/priorita" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,20 +18,24 @@ import com.lightingorder.Model.Data;
 import com.lightingorder.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class OrderActivity extends AppCompatActivity {
 
     Spinner prodotto;
-    Spinner prodotto2;
-    Spinner prodotto3;
+    Spinner merceDaAggiungere;
+    Spinner merceDaSottrarre;
     TextView numero_tavolo;
     TextView numero_sala;
     EditText priorita;
+
     UserSessionController user_contr = new UserSessionController();
     String tableID;
     int roomNumber;
+    List<List<String>> additive = new ArrayList<>();
+    List<List<String>> subtract = new ArrayList<>();
+    List<String> items_name = new ArrayList<>();
+    List<Integer> priority  = new ArrayList<>();
 
 
     @Override
@@ -39,13 +44,14 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
 
         String[] items = Data.getData().getMenuItemsName();
+        String[] merce_additiva = {"No selection","Patate","Origano","Aglio","Funghi","Olive"};
 
         tableID = getIntent().getStringExtra("tableID");
         roomNumber = getIntent().getIntExtra("roomNumber",1);
 
-        prodotto = (Spinner) findViewById(R.id.prodotto);
-        prodotto2 = (Spinner) findViewById(R.id.prodotto2);
-        prodotto3= (Spinner) findViewById(R.id.prodotto3);
+        prodotto = (Spinner) findViewById(R.id.prodotto_spinner);
+        merceDaAggiungere = (Spinner) findViewById(R.id.additive_spinner);
+        merceDaSottrarre= (Spinner) findViewById(R.id.subGoods_spinner);
         numero_tavolo = (TextView) findViewById(R.id.table_number);
         numero_sala = (TextView) findViewById(R.id.room_number);
         priorita = (EditText) findViewById(R.id.priorita);
@@ -54,25 +60,37 @@ public class OrderActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, items);
         prodotto.setAdapter(adapter);
-        prodotto2.setAdapter(adapter);
-        prodotto3.setAdapter(adapter);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, merce_additiva);
+        merceDaAggiungere.setAdapter(adapter2);
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, merce_additiva);
+        merceDaSottrarre.setAdapter(adapter);
+
     }
 
-    public void addOrder(View view){
+    public void addItem(View view){
 
-        List<String> items_name = new ArrayList<>();
-        if(!(prodotto.getSelectedItem().toString().equals("No selection")))
+        List<String> tmp_additive = new ArrayList<>();
+        List<String> tmp_subtract = new ArrayList<>();
+
+        if(!(prodotto.getSelectedItem().toString().equals("No selection") || (priorita.getText().toString().equals("")))) {
             items_name.add(prodotto.getSelectedItem().toString());
+            priority.add(Integer.parseInt(priorita.getText().toString()));
 
-        if(!(prodotto2.getSelectedItem().toString().equals("No selection")))
-            items_name.add(prodotto2.getSelectedItem().toString());
+            if(!(merceDaAggiungere.getSelectedItem().toString().equals("No selection")))
+                tmp_additive.add(merceDaAggiungere.getSelectedItem().toString());
+            additive.add(tmp_additive);
 
-        if(!(prodotto3.getSelectedItem().toString().equals("No selection")))
-            items_name.add(prodotto3.getSelectedItem().toString());
+            if(!(merceDaSottrarre.getSelectedItem().toString().equals("No selection")))
+                tmp_subtract.add(merceDaSottrarre.getSelectedItem().toString());
+            subtract.add(tmp_subtract);
 
-        List<List<String>> additive = Collections.<List<String>>emptyList();
-        List<Integer> priority = new ArrayList<Integer>();
-        priority.add(Integer.parseInt(priorita.getText().toString()));
+            Toast.makeText(getApplicationContext(),"Prodotto inserito",Toast.LENGTH_SHORT).show();
+        }
+        else Toast.makeText(getApplicationContext(),"Selezionare un prodotto e la priorità",Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void addOrder(View view){
 
         ConnectivityController.sendAddOrderToTableRequest(
                 user_contr,
@@ -81,8 +99,11 @@ public class OrderActivity extends AppCompatActivity {
                 roomNumber,
                 items_name,
                 additive,
+                subtract,
                 priority);
         Log.d("ACTIVITY","ORDER ACTIVITY: Add order request sent");
+
+
     }
 
     @Override

@@ -399,10 +399,8 @@ public class ConnectivityController {   //Singleton
 
     public static void sendAddOrderToTableRequest(UserSessionController us_contr,
                                                   String proxy_addr, String tableID, int roomNumber,
-                                                  List<String> items_name,List<List<String>> additive,
+                                                  List<String> items_name,List<List<String>> additive, List<List<String>> sub,
                                                   List<Integer> priority){
-
-        List<List<String>> sub = Collections.<List<String>>emptyList();
 
         orderToTableGenerationRequest.orderParameters param = new orderToTableGenerationRequest.orderParameters(
                         items_name,
