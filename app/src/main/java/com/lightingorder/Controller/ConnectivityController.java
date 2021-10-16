@@ -22,6 +22,8 @@ import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
 import com.lightingorder.Model.RestaurantArea.Order;
 import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.Model.messages.baseMessage;
+import com.lightingorder.Model.messages.cancelOrderRequest;
+import com.lightingorder.Model.messages.itemOpRequest;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.menuRequest;
 import com.lightingorder.Model.messages.orderRequest;
@@ -29,6 +31,7 @@ import com.lightingorder.Model.messages.orderToTableGenerationRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
+import com.lightingorder.View.OrderListActivity;
 import com.lightingorder.View.TableActivity;
 
 import org.json.JSONArray;
@@ -66,7 +69,7 @@ public class ConnectivityController {   //Singleton
                 user_contr.addRoleAndProxy(msg_rcvd.result,msg_rcvd.proxySource);
                 AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast t = Toast.makeText(AppStateController.getApplication().getCurrent_activity(), "Ruolo " + msg_rcvd.result + " aggiunto!", Toast.LENGTH_LONG);
+                        Toast t = Toast.makeText(AppStateController.getApplication().getCurrent_activity(), "Ruolo " + msg_rcvd.result + " riconosciuto!", Toast.LENGTH_LONG);
                         t.show();
                     }
                 });
@@ -171,8 +174,21 @@ public class ConnectivityController {   //Singleton
                                 e.printStackTrace();
                             }
                             Data.getData().setTablesList(tables);
-                            Intent i = new Intent(AppStateController.getApplication().getCurrent_activity(), TableActivity.class);
-                            AppStateController.getApplication().getCurrent_activity().startActivity(i);
+
+                            Activity current3 = AppStateController.getApplication().getCurrent_activity();
+                            Intent i;
+                            i = new Intent(current3, TableActivity.class);
+                            current3.startActivity(i);
+                            /*if(current3.getLocalClassName().equals("View.FunctionalityActivity")){
+                                i = new Intent(current3, TableActivity.class);
+                                current3.startActivity(i);
+                            }
+                            else if(current3.getLocalClassName().equals("View.OrderListActivity")
+                            ||  current3.getLocalClassName().equals("View.OrderActivity")){
+                                i = new Intent(current3, OrderListActivity.class);
+                                current3.startActivity(i);
+                            }*/
+
                             txt_to_show = "Table list updated";
                             Log.d("SERVER","TableRequest: Table list updated");
                             break;
@@ -224,7 +240,7 @@ public class ConnectivityController {   //Singleton
                 String finalTxt_to_show = txt_to_show;
                 AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast t = Toast.makeText(AppStateController.getApplication().getCurrent_activity(), finalTxt_to_show, Toast.LENGTH_LONG);
+                        Toast t = Toast.makeText(AppStateController.getApplication().getCurrent_activity(), finalTxt_to_show, Toast.LENGTH_SHORT);
                         t.show();
                     }
                 });
@@ -422,4 +438,38 @@ public class ConnectivityController {   //Singleton
         ConnectivityController.sendPost(msg_body,proxy_addr);
 
     }
+
+    public static void sendCancelOrderRequest(UserSessionController us_contr, String proxy_addr, int orderID){
+
+        Gson gson = new Gson();
+        cancelOrderRequest req_body = new cancelOrderRequest(
+                us_contr.getUserID(),
+                proxy_addr,
+                "cancelOrderRequest",
+                "",
+                "",
+                orderID);
+        String msg_body = gson.toJson(req_body);
+        ConnectivityController.sendPost(msg_body,proxy_addr);
+    }
+
+
+    public static void sendCancelOrderedItemRequest(UserSessionController us_contr, String proxy_addr, int orderID, int lineNumber){
+
+        Gson gson = new Gson();
+        itemOpRequest req_body = new itemOpRequest(
+                us_contr.getUserID(),
+                proxy_addr,
+                "cancelOrderedItemRequest",
+                "",
+                "",
+                orderID,
+                lineNumber);
+        String msg_body = gson.toJson(req_body);
+        ConnectivityController.sendPost(msg_body,proxy_addr);
+
+    }
+
 }
+
+

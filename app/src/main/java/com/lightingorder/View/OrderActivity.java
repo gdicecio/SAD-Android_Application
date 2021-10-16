@@ -29,13 +29,13 @@ public class OrderActivity extends AppCompatActivity {
     TextView numero_sala;
     EditText priorita;
 
-    UserSessionController user_contr = new UserSessionController();
-    String tableID;
-    int roomNumber;
-    List<List<String>> additive = new ArrayList<>();
-    List<List<String>> subtract = new ArrayList<>();
-    List<String> items_name = new ArrayList<>();
-    List<Integer> priority  = new ArrayList<>();
+    private UserSessionController user_contr = new UserSessionController();
+    private String tableID;
+    private int roomNumber;
+    private List<List<String>> additive = new ArrayList<>();
+    private List<List<String>> subtract = new ArrayList<>();
+    private List<String> items_name = new ArrayList<>();
+    private List<Integer> priority  = new ArrayList<>();
 
 
     @Override
@@ -63,7 +63,7 @@ public class OrderActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, merce_additiva);
         merceDaAggiungere.setAdapter(adapter2);
         ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, merce_additiva);
-        merceDaSottrarre.setAdapter(adapter);
+        merceDaSottrarre.setAdapter(adapter3);
 
     }
 
@@ -90,20 +90,23 @@ public class OrderActivity extends AppCompatActivity {
     }
 
 
-    public void addOrder(View view){
+    public void addOrder(View view) {
 
-        ConnectivityController.sendAddOrderToTableRequest(
-                user_contr,
-                user_contr.getCurrentProxy(),
-                tableID,
-                roomNumber,
-                items_name,
-                additive,
-                subtract,
-                priority);
-        Log.d("ACTIVITY","ORDER ACTIVITY: Add order request sent");
+        if (items_name.size() == 0) {
+            Toast.makeText(getApplicationContext(), "Inserire almeno un prodotto nell'ordine", Toast.LENGTH_SHORT).show();
+        } else {
+            ConnectivityController.sendAddOrderToTableRequest(
+                    user_contr,
+                    user_contr.getCurrentProxy(),
+                    tableID,
+                    roomNumber,
+                    items_name,
+                    additive,
+                    subtract,
+                    priority);
 
-
+            Log.d("ACTIVITY", "ORDER ACTIVITY: Add order request sent");
+        }
     }
 
     @Override

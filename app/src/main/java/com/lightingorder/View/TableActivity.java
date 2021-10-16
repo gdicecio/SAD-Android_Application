@@ -2,7 +2,6 @@ package com.lightingorder.View;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -11,8 +10,6 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.lightingorder.Controller.AppStateController;
 import com.lightingorder.Controller.ConnectivityController;
 import com.lightingorder.Controller.UserSessionController;
@@ -24,16 +21,13 @@ import com.lightingorder.View.Adapters.StateAdapter;
 import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.View.Adapters.TablesAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
 public class TableActivity extends AppCompatActivity {
 
     GridView tables_view;
-    UserSessionController user_contr = new UserSessionController();
 
+    private UserSessionController user_contr = new UserSessionController();
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
     private ListView lv_states;
@@ -72,7 +66,7 @@ public class TableActivity extends AppCompatActivity {
     //pop-up
     private void createNewContactDialog(String tableID, int tableRoom, String currentTableState){
         dialogBuilder = new AlertDialog.Builder(this);
-        final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
+        final View changeTableStatePopUpView = getLayoutInflater().inflate(R.layout.popup_table_operation, null);
         operationsAvlbl = new ArrayList<StateOp>();
 
         if(currentTableState.equals(StdTerms.statesList.free.name())){
@@ -85,10 +79,10 @@ public class TableActivity extends AppCompatActivity {
         }
 
         StateAdapter adapter = new StateAdapter(this, operationsAvlbl);
-        lv_states = (ListView) contactPopupView.findViewById(R.id.states_list);
+        lv_states = (ListView) changeTableStatePopUpView.findViewById(R.id.states_list);
         lv_states.setAdapter(adapter);
 
-        dialogBuilder.setView(contactPopupView);
+        dialogBuilder.setView(changeTableStatePopUpView);
         dialog = dialogBuilder.create();
         dialog.show();
 

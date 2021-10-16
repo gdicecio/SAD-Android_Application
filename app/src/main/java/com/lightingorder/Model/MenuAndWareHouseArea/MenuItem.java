@@ -6,16 +6,6 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.List;
 
-/**JSON Format:
- * {
- *      name : "name_value"
- *      description : "description_value"
- *      price : "price_value"
- *      inStock : "inStock_value"
- *      area : "area_value"
- *      goodsID : ["goodsID1", "goodsID2", ... , "goodsIDn"]
- * }
- * */
 public class MenuItem {
 
     @Expose
@@ -30,11 +20,6 @@ public class MenuItem {
     protected String area;
     @Expose
     protected List<String> goodsID;
-
-    /**
-     * Constructor for ordered item
-     * @param item
-     */
 
     public MenuItem(){
 

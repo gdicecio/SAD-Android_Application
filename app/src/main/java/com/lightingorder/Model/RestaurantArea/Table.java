@@ -42,7 +42,7 @@ public class Table {
         this.tableID = tableID;
     }
 
-    public ArrayList<Order> getOrderList(){return (ArrayList<Order>) this.orders;}
+    public ArrayList<Order> getOrdersList(){return (ArrayList<Order>) this.orders;}
 
     public void addOrderToTable(Order new_order){this.orders.add(new_order);}
 

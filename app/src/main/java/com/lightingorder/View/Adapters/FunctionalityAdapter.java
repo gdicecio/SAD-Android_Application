@@ -17,14 +17,14 @@ public class FunctionalityAdapter extends ArrayAdapter<Functionality> {
     private final Activity context;
 
     public FunctionalityAdapter(Activity context, ArrayList<Functionality> f){
-        super(context, R.layout.item_list, f);
+        super(context, R.layout.item_list_func, f);
         this.context = context;
     }
 
     public View getView(int position, View view, ViewGroup parent){
         Functionality fun = getItem(position);
 
-        view = LayoutInflater.from(context).inflate(R.layout.item_list, parent, false);
+        view = LayoutInflater.from(context).inflate(R.layout.item_list_func, parent, false);
 
         TextView titleText = (TextView) view.findViewById(R.id.title);
         TextView iconText = (TextView) view.findViewById(R.id.icon);

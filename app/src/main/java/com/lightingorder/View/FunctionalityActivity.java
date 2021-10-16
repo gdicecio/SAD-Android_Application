@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class FunctionalityActivity extends AppCompatActivity {
 
     ListView lv_function;
-    UserSessionController user_contr = new UserSessionController();
+    private UserSessionController user_contr = new UserSessionController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -17,14 +17,14 @@ public class StateAdapter extends ArrayAdapter<StateOp>{
     private final Activity context;
 
     public StateAdapter(Activity context, ArrayList<StateOp> s){
-        super(context, R.layout.item_list, s);
+        super(context, R.layout.item_list_func, s);
         this.context = context;
     }
 
     public View getView(int position, View view, ViewGroup parent){
         StateOp st = getItem(position);
 
-        view = LayoutInflater.from(context).inflate(R.layout.item_list, parent, false);
+        view = LayoutInflater.from(context).inflate(R.layout.item_list_func, parent, false);
 
         TextView titleText = (TextView) view.findViewById(R.id.title);
         TextView iconText = (TextView) view.findViewById(R.id.icon);

@@ -3,6 +3,7 @@ package com.lightingorder.Model.RestaurantArea;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,6 +72,16 @@ public class Order {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String[] getOrderProductsName(){
+        String[] to_ret = new String[this.orderedItems.size()];
+        int i = 0;
+        for(OrderedItem p : this.orderedItems){
+            to_ret[i] = p.getItem();
+            i += 1;
+        }
+        return to_ret;
     }
 
 }

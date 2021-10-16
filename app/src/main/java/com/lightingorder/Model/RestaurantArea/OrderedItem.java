@@ -85,4 +85,9 @@ public class OrderedItem {
     public void setPriority(int priority) {
         this.priority = priority;
     }
+
+    @Override
+    public String toString() {
+        return this.item ;
+    }
 }

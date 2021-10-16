@@ -1,13 +1,13 @@
 package com.lightingorder.Model;
 
-import android.view.Menu;
-
 import com.lightingorder.Model.MenuAndWareHouseArea.Goods;
 import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
 import com.lightingorder.Model.RestaurantArea.Order;
+import com.lightingorder.Model.RestaurantArea.OrderedItem;
 import com.lightingorder.Model.RestaurantArea.Table;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //Singleton
 public class Data {
@@ -63,6 +63,33 @@ public class Data {
         }
     }
 
+    public List<OrderedItem> getOrderedItemsForOrder(String tableID, int roomNumber, int orderID){
+        ArrayList<Order> orders = getTableOrders(tableID,roomNumber);
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(orders.get(i).getOrderID() == orderID){
+                find = true;
+            }
+            else i = i + 1;
+        }
+        return orders.get(i).getOrderedItems();
+    }
+
+
+    public String[] getProductsNameForOrder(String tableID, int roomNumber, int orderID){
+        ArrayList<Order> orders = getTableOrders(tableID,roomNumber);
+        boolean find = false;
+        int i = 0;
+        while(!find){
+            if(orders.get(i).getOrderID() == orderID){
+                find = true;
+            }
+            else i = i + 1;
+        }
+
+        return orders.get(i).getOrderProductsName();
+    }
 
     public void removeOrderFromList(int orderID){
         boolean find = false;
@@ -85,8 +112,10 @@ public class Data {
             else
                 i = i + 1;
         }
-        return istanza.tablesList.get(i).getOrderList();
+        return istanza.tablesList.get(i).getOrdersList();
     }
+
+
 
     public void addOrderToTable(String tableID, int roomNumber, Order new_order){
         boolean find = false;
