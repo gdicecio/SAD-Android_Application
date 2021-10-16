@@ -10,12 +10,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Merce Sottrattiva"
+        android:text="Prodotto 3"
         app:layout_constraintStart_toStartOf="@+id/prodotto"
-        app:layout_constraintTop_toBottomOf="@+id/merce_aggiuntiva" />
+        app:layout_constraintTop_toBottomOf="@+id/prodotto2" />
 
     <Spinner
-        android:id="@+id/merce_sottrattiva"
+        android:id="@+id/prodotto3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
@@ -29,12 +29,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Merce Aggiuntiva"
+        android:text="Prdotto 2"
         app:layout_constraintStart_toStartOf="@+id/prodotto"
         app:layout_constraintTop_toBottomOf="@+id/prodotto" />
 
     <Spinner
-        android:id="@+id/merce_aggiuntiva"
+        android:id="@+id/prodotto2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="80dp"
-        android:text="Prodotto"
+        android:text="Prodotto 1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/table_number" />
 
@@ -116,8 +116,8 @@
         android:layout_height="15dp"
         android:layout_marginTop="20dp"
         android:text="Priorità"
-        app:layout_constraintStart_toStartOf="@+id/merce_sottrattiva"
-        app:layout_constraintTop_toBottomOf="@+id/merce_sottrattiva" />
+        app:layout_constraintStart_toStartOf="@+id/prodotto3"
+        app:layout_constraintTop_toBottomOf="@+id/prodotto3" />
 
     <EditText
         android:id="@+id/priorita"
@@ -135,7 +135,7 @@
         android:layout_marginTop="60dp"
         android:onClick="addOrder"
         android:text="Aggiungi Ordine"
-        app:layout_constraintEnd_toEndOf="@+id/merce_sottrattiva"
+        app:layout_constraintEnd_toEndOf="@+id/prodotto3"
         app:layout_constraintTop_toBottomOf="@+id/priorita" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

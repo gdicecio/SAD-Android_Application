@@ -1,7 +1,7 @@
 package com.lightingorder.Model.messages;
 
 public class itemOpRequest extends baseMessage{
-	public int  orderID;
+	public int orderID;
 	public int itemLineNumber;
 
 	public itemOpRequest(int orderID, int itemLineNumber) {

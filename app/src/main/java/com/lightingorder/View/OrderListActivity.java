@@ -52,6 +52,13 @@ public class OrderListActivity extends AppCompatActivity {
         room_number.setText(Integer.toString(roomNumber));
 
         order_list.setAdapter(adapter);
+        order_list.setOnLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(OrderListAdapter parent, View view, int position, long id) {
+                int i  = 0;
+                return true;
+            }
+        });
     }
 
     public void addOrder(View view){

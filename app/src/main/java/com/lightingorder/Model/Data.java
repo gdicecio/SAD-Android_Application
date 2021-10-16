@@ -32,6 +32,18 @@ public class Data {
 
     public ArrayList<MenuItem> getMenuList(){ return istanza.menuList; }
 
+    public String[] getMenuItemsName(){
+        String[] to_ret = new String[istanza.menuList.size()+1];
+        to_ret[0] = "No selection";
+        int i = 1;
+        for(MenuItem m : istanza.menuList){
+            to_ret[i] = m.getName();
+            i += 1;
+        }
+
+        return to_ret;
+    }
+
     public void setTablesList(ArrayList<Table> tablesList) {istanza.tablesList = tablesList;}
 
     public void setOrdersList(ArrayList<Order> ordersList) {istanza.ordersList = ordersList;}
