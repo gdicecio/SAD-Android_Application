@@ -11,6 +11,8 @@ import java.util.HashMap;
 
 public class UserSessionController {
     private User utente;
+    public static String table_selected;
+    public static int roomNumber_selected;
 
     public UserSessionController() {
         this.utente = User.getUser();
@@ -89,4 +91,8 @@ public class UserSessionController {
         }
         return funs;
     }
+
+    public boolean getLoginResult(){return utente.isLoginSuccesful();}
+
+    public void setloginResult(boolean result){ utente.setLoginSuccesful(result);}
 }

@@ -24,6 +24,7 @@ public class StdTerms {
         Map <String, String> aMap = new HashMap<>();
         aMap.put(useCases.CreaOrdinazione.name(),roles.Cameriere.name() );
         aMap.put(useCases.VisualizzaOrdinazioniCucina.name(), roles.Cucina.name());
+        aMap.put(useCases.VisualizzaOrdinazioniForno.name(), roles.Forno.name());
         aMap.put(useCases.VisualizzaOrdinazioniBar.name(), roles.Bar.name());
         aMap.put(useCases.AggiornaStatoTavolo.name(), roles.Accoglienza.name());
         UC_Role = Collections.unmodifiableMap(aMap);
@@ -58,16 +59,22 @@ public class StdTerms {
         cancelOrderRequest,
         cancelOrderedItemRequest,
         orderToTableGenerationRequest,
-        orderNotification,
         tableRequest,
         freeTableRequest,
         userWaitingForOrderRequest,
         itemCompleteRequest,
         itemWorkingRequest,
         orderRequest,
-        userWaitingNotification,
         loginRequest,
+        orderNotification,
+        userWaitingNotification,
         registerNotification
+    }
+
+    public enum state_item{
+        WaitingForWorking,
+        Working,
+        Completed
     }
 
 }

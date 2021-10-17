@@ -14,6 +14,7 @@ import com.lightingorder.Controller.AppStateController;
 import com.lightingorder.Controller.ConnectivityController;
 import com.lightingorder.Controller.UserSessionController;
 import com.lightingorder.Model.Data;
+import com.lightingorder.Model.UserData.User;
 import com.lightingorder.R;
 import com.lightingorder.StdTerms;
 import com.lightingorder.Model.StateOp;
@@ -51,8 +52,8 @@ public class TableActivity extends AppCompatActivity {
 
                 if (user_contr.getCurrentRole().equals(StdTerms.roles.Cameriere.name())) {
                     Intent i = new Intent(getApplicationContext(), OrderListActivity.class);
-                    i.putExtra("tableID",tab.getTableID());
-                    i.putExtra("roomNumber", tab.getTableRoomNumber());
+                    UserSessionController.table_selected = tab.getTableID();
+                    UserSessionController.roomNumber_selected = tab.getTableRoomNumber();
                     startActivity(i);
                 }
                 else if(user_contr.getCurrentRole().equals(StdTerms.roles.Accoglienza.name())) {
@@ -93,17 +94,6 @@ public class TableActivity extends AppCompatActivity {
                 ConnectivityController.sendTableOperationRequest(user_contr,
                         user_contr.getCurrentProxy(),tableID,tableRoom,s.getID());
                 dialog.dismiss();
-
-               /* new CountDownTimer(1000, 1000) {
-                    public void onFinish() {
-                        // When timer is finished // Execute your code here
-                        finish();
-                        startActivity(getIntent());
-                    }
-                    public void onTick(long millisUntilFinished) {
-                        // millisUntilFinished    The amount of time until finished.
-                    }
-                }.start();*/
 
             }
         });

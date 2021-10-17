@@ -1,11 +1,15 @@
 package com.lightingorder.Controller;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,6 +34,7 @@ import com.lightingorder.Model.messages.orderRequest;
 import com.lightingorder.Model.messages.orderToTableGenerationRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
+import com.lightingorder.R;
 import com.lightingorder.StdTerms;
 import com.lightingorder.View.MakerActivity;
 import com.lightingorder.View.OrderListActivity;
@@ -39,12 +44,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ConnectivityController {   //Singleton
     private static ConnectivityController istanza = null;
     private final AsyncHttpServer server = new AsyncHttpServer();
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private TextView testo_notifca;
+    private Button vai_alla_pagina;
+    private Button chiudi;
+    private String notificationType;
 
     private ConnectivityController(){}
     public static synchronized ConnectivityController getConnectivity(){
@@ -91,63 +101,97 @@ public class ConnectivityController {   //Singleton
                 String message_type  = msg_rcvd.messageName;
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 Gson gsonReq = new Gson();
-                String txt_to_show = "";
+                String txt_to_show;
                 String resp = ""+msg_rcvd.response;
 
                 if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound") ||
                         resp.contains("NotCreated"))) {
                     switch (message_type) {
+
                         case "cancelOrderedItemRequest":
-                            //TODO aggiorna in locale
-                            sendTableRequest(
-                                    user_contr,
-                                    user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
+                            itemOpRequest cancel_item_msg = gsonReq.fromJson(req, itemOpRequest.class);
+                            Data.getData().removeOrderedItem(cancel_item_msg.orderID,cancel_item_msg.itemLineNumber);
+
+                            Activity current0 = AppStateController.getApplication().getCurrent_activity();
+                            if(current0.getLocalClassName().equals("View.OrderListActivity")){
+                                current0.finish();
+                                current0.startActivity(current0.getIntent());
+                            }
                             txt_to_show = "Product removed from the order";
                             Log.d("SERVER","CancelOrderedItemRequest: Product removed from the order");
                             break;
 
+
                         case "cancelOrderRequest":
-                            //TODO aggiorna in locale
-                            sendTableRequest(
-                                    user_contr,
-                                    user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
+                            cancelOrderRequest cancel_order_msg = gsonReq.fromJson(req, cancelOrderRequest.class);
+                            Data.getData().removeOrderFromTableList(cancel_order_msg.orderID);
+
+                            Activity current1 = AppStateController.getApplication().getCurrent_activity();
+                            if(current1.getLocalClassName().equals("View.OrderListActivity")){
+                                current1.finish();
+                                current1.startActivity(current1.getIntent());
+                            }
+
                             txt_to_show = "Order removed";
                             Log.d("SERVER","CancelOrderRequest: Order removed");
                             break;
+
 
                         case "orderToTableGenerationRequest":
                             sendTableRequest(
                                     user_contr,
                                     user_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
+                            AppStateController.getApplication().getCurrent_activity().finish();
                             txt_to_show = "Order added";
                             Log.d("SERVER","OrderToTableGenerationRequest: Order added");
                             break;
 
+
                         case "itemCompleteRequest":
-                            //TODO
+                            itemOpRequest item_compl_msg = gsonReq.fromJson(req, itemOpRequest.class);
+                            Data.getData().updateItemState(item_compl_msg.orderID,
+                                    item_compl_msg.itemLineNumber, StdTerms.state_item.Completed.name());
+
+                            Activity current2 = AppStateController.getApplication().getCurrent_activity();
+                            if(current2.getLocalClassName().equals("View.MakerActivity")){
+                                current2.finish();
+                                current2.startActivity(current2.getIntent());
+                            }
+
                             txt_to_show = "Action registered";
                             Log.d("SERVER","ItemCompleteRequest: Action registred");
                             break;
 
+
                         case "itemWorkingRequest":
-                            //TODO
+                            itemOpRequest item_work_msg = gsonReq.fromJson(req, itemOpRequest.class);
+                            Data.getData().updateItemState(item_work_msg.orderID,
+                                    item_work_msg.itemLineNumber, StdTerms.state_item.Working.name());
+
+                            Activity current3 = AppStateController.getApplication().getCurrent_activity();
+                            if(current3.getLocalClassName().equals("View.MakerActivity")){
+                                current3.finish();
+                                current3.startActivity(current3.getIntent());
+                            }
                             txt_to_show = "Request accepted";
                             Log.d("SERVER","ItemWorkingRequest: Request accepted");
                             break;
+
 
                         case "freeTableRequest":
                             tableOperation free_msg = gsonReq.fromJson(req, tableOperation.class);
                             Data.getData().updateTableState(free_msg.tableID,
                                                             free_msg.tableRoomNumber,
                                                             StdTerms.statesList.free.name());
-                            Activity current = AppStateController.getApplication().getCurrent_activity();
-                            if(current.getLocalClassName().equals("View.TableActivity")){
-                                current.finish();
-                                current.startActivity(current.getIntent());
+                            Activity current4 = AppStateController.getApplication().getCurrent_activity();
+                            if(current4.getLocalClassName().equals("View.TableActivity")){
+                                current4.finish();
+                                current4.startActivity(current4.getIntent());
                             }
                             txt_to_show = "Table state updated";
                             Log.d("SERVER","FreeTableRequest: Table state updated");
                             break;
+
 
                         case "userWaitingForOrderRequest":
                             tableOperation usr_wait_msg = gsonReq.fromJson(req, tableOperation.class);
@@ -155,22 +199,22 @@ public class ConnectivityController {   //Singleton
                                                             usr_wait_msg.tableRoomNumber,
                                                             StdTerms.statesList.waitingForOrders.name());
 
-                            Activity current2 = AppStateController.getApplication().getCurrent_activity();
-                            if(current2.getLocalClassName().equals("View.TableActivity")){
-                                current2.finish();
-                                current2.startActivity(current2.getIntent());
+                            Activity current5 = AppStateController.getApplication().getCurrent_activity();
+                            if(current5.getLocalClassName().equals("View.TableActivity")){
+                                current5.finish();
+                                current5.startActivity(current5.getIntent());
                             }
                             txt_to_show = "Table state updated";
                             Log.d("SERVER","UserWaitingForOrderRequest: Table state updated");
                             break;
+
 
                         case "tableRequest":
                             ArrayList<Table> tables = new ArrayList<Table>();
                             try {
                                 JSONArray j = new JSONArray(msg_rcvd.response);
                                 for(int i=0; i<j.length(); i++){
-                                    Table single_table = new Table();
-                                    single_table = (Table) gson.fromJson(j.get(i).toString(), Table.class);
+                                    Table single_table = (Table) gson.fromJson(j.get(i).toString(), Table.class);
                                     tables.add(single_table);
                                 }
                             } catch (JSONException e) {
@@ -178,15 +222,17 @@ public class ConnectivityController {   //Singleton
                             }
                             Data.getData().setTablesList(tables);
 
-                            Activity current3 = AppStateController.getApplication().getCurrent_activity();
+                            Activity current6 = AppStateController.getApplication().getCurrent_activity();
                             Intent i;
-                            i = new Intent(current3, TableActivity.class);
-                            if(current3.getLocalClassName().equals("View.FunctionalityActivity"))
-                                current3.startActivity(i);
+                            if(current6.getLocalClassName().equals("View.FunctionalityActivity")) {
+                                i = new Intent(current6, TableActivity.class);
+                                current6.startActivity(i);
 
-                            else {
-                                current3.finish();
-                                current3.finish();
+                            }
+                            else if(current6.getLocalClassName().equals("View.OrderListActivity")){
+                                i = new Intent(current6,OrderListActivity.class);
+                                current6.startActivity(i);
+                                current6.finish();
                             }
 
                             txt_to_show = "Table list updated";
@@ -217,8 +263,7 @@ public class ConnectivityController {   //Singleton
                             try {
                                 JSONArray j = new JSONArray(msg_rcvd.response);
                                 for(int k=0; k<j.length(); k++){
-                                    Order single_order = new Order();
-                                    single_order = (Order) gson.fromJson(j.get(k).toString(), Order.class);
+                                    Order single_order = (Order) gson.fromJson(j.get(k).toString(), Order.class);
                                     orders.add(single_order);
                                 }
                             } catch (JSONException e) {
@@ -226,11 +271,10 @@ public class ConnectivityController {   //Singleton
                             }
                             Data.getData().setOrdersList(orders, order_msg.area);
 
-                            Activity current4 = AppStateController.getApplication().getCurrent_activity();
+                            Activity current7 = AppStateController.getApplication().getCurrent_activity();
                             Intent intent;
-                            intent = new Intent(current4, MakerActivity.class);
-                            current4.finish();
-                            current4.startActivity(intent);
+                            intent = new Intent(current7, MakerActivity.class);
+                            current7.startActivity(intent);
 
                             txt_to_show = "Order list updated";
                             break;
@@ -264,15 +308,22 @@ public class ConnectivityController {   //Singleton
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 //Retrieve the message body as String (in JSON format)
                 String req = request.getBody().toString();
+
                 //Create the object using the JSON string
                 baseMessage msg_rcvd = gson.fromJson(req, baseMessage.class);
                 String message_type  = msg_rcvd.messageName;
 
-                if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound"))) {
+                switch (message_type){
 
+                    case "userWaitingNotification":
+                        break;
+
+                    case "orderNotification":
+                        break;
+
+                    default:
 
                 }
-                else {}
 
                 AppStateController.getApplication().getCurrent_activity().runOnUiThread(new Runnable() {
                     public void run() {
@@ -512,6 +563,31 @@ public class ConnectivityController {   //Singleton
         String msg_body = gson.toJson(req_body);
         ConnectivityController.sendPost(msg_body,proxy_addr);
     }
+
+
+    private void createNotificationPopup(String notificationTxt, String notificationType){
+
+        Activity current = AppStateController.getApplication().getCurrent_activity();
+        dialogBuilder = new AlertDialog.Builder(current);
+        final View notificationPopup = current.getLayoutInflater().inflate(R.layout.popup_notification,null);
+
+        vai_alla_pagina = (Button) notificationPopup.findViewById(R.id.notification_popup_goToActivity_button);
+        chiudi = (Button) notificationPopup.findViewById(R.id.popup_notification_chiudi_button);
+        testo_notifca = (TextView) notificationPopup.findViewById(R.id.popup_notification_textView);
+
+        testo_notifca.setText(notificationTxt);
+
+        dialogBuilder.setView(notificationPopup);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+    }
+
+    public void goToPage(View view){
+
+
+    }
+
 
 }
 

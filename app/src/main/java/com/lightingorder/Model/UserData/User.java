@@ -9,6 +9,8 @@ public class User {
     private  HashMap<String,String> ruoli_proxy = new HashMap<String,String>();
     private  String ipAddress;
     private  String current_role;
+    private boolean loginSuccesful;
+
 
     private User() { }
 
@@ -48,5 +50,13 @@ public class User {
     public String getCurrent_role() {return istanza.current_role;}
 
     public void setCurrent_role(String current_role) {istanza.current_role = current_role;}
+
+    public boolean isLoginSuccesful() {
+        return loginSuccesful;
+    }
+
+    public void setLoginSuccesful(boolean loginSuccesful) {
+        this.loginSuccesful = loginSuccesful;
+    }
 
 }

@@ -8,6 +8,7 @@ import com.lightingorder.Model.RestaurantArea.Table;
 import com.lightingorder.StdTerms;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //Singleton
@@ -31,6 +32,8 @@ public class Data {
 
     public ArrayList<Table> getTablesList() {return istanza.tablesList;}
 
+
+
     public ArrayList<Order> getOrdersList(String role) {
         if(role.equals(StdTerms.roles.Forno.name()))
             return istanza.pizza_ordersList;
@@ -41,6 +44,7 @@ public class Data {
         else
             return new ArrayList<Order>();
     }
+
 
     public ArrayList<MenuItem> getMenuList(){ return istanza.menuList; }
 
@@ -56,7 +60,10 @@ public class Data {
         return to_ret;
     }
 
-    public void setTablesList(ArrayList<Table> tablesList) {istanza.tablesList = tablesList;}
+    public void setTablesList(ArrayList<Table> tablesList) {
+        istanza.tablesList = tablesList;
+        Collections.sort(istanza.tablesList,(o1, o2) -> o1.getTableID().compareTo(o2.getTableID()));
+    }
 
     public void setOrdersList(ArrayList<Order> ordersList, String role) {
         if(role.equals(StdTerms.roles.Forno.name()))
@@ -77,7 +84,7 @@ public class Data {
                     istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
                 find = true;
             }
-            i = i + 1;
+            else i = i + 1;
         }
         return istanza.tablesList.get(i);
     }
@@ -87,7 +94,6 @@ public class Data {
     }
 
     public ArrayList<Order> getTableOrders(String tableID, int roomNumber){
-
         return getTable(tableID,roomNumber).getOrdersList();
     }
 
@@ -106,40 +112,103 @@ public class Data {
     }
 
 
-    public void removeOrderFromList(int orderID) {
+    public void updateItemState(int orderID, int lineNumber, String new_state) {
         boolean findBar = false;
         boolean findKitch = false;
         boolean findPizza = false;
         int i = 0;
         while (!(findBar && findKitch && findPizza)) {
-            if (!findBar) {
+            if (istanza.bar_ordersList.size() > 0 && (!findBar) ) {
                 if (istanza.bar_ordersList.get(i).getOrderID() == orderID) {
                     findBar = true;
-                    istanza.bar_ordersList.remove(i);
+                    istanza.bar_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
                 }
             }
-            if (!findKitch) {
+            if (istanza.kitchen_ordersList.size() > 0 && (!findKitch)) {
                 if (istanza.kitchen_ordersList.get(i).getOrderID() == orderID) {
                     findKitch = true;
-                    istanza.kitchen_ordersList.remove(i);
+                    istanza.kitchen_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
                 }
             }
-            if (!findKitch) {
-                if (istanza.kitchen_ordersList.get(i).getOrderID() == orderID) {
-                    findKitch = true;
-                    istanza.kitchen_ordersList.remove(i);
+            if (istanza.pizza_ordersList.size() > 0 && (!findPizza)) {
+                if (istanza.pizza_ordersList.get(i).getOrderID() == orderID) {
+                    findPizza = true;
+                    istanza.pizza_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
                 }
             }
-
             i = i+1;
         }
     }
 
 
-    public void deleteOrderFromTable(String tableID, int roomNumber, int orderID){
-        getTable(tableID,roomNumber).removeOrderFromTable(orderID);
-        istanza.removeOrderFromList(orderID);
+    public void removeOrderFromTableList(int orderID){
+        boolean orderFound = false;
+        int i = 0;
+        int k = 0;
+        ArrayList<Order> orders;
+
+        while(!orderFound){
+            orders = getTableOrders(istanza.tablesList.get(i).getTableID(),istanza.tablesList.get(i).getTableRoomNumber());
+            while(!orderFound && k<orders.size()){
+                if(orders.get(k).getOrderID() == orderID){
+                    orderFound = true;
+                }else k = k+1;
+            }
+            i = i+1;
+        }
+        istanza.tablesList.get(i-1).getOrdersList().remove(k);
     }
 
+
+    public void removeOrderedItem(int orderID, int lineNumber){
+        boolean orderFound = false;
+        boolean itemFound = false;
+        int i = 0;
+        int k = 0;
+        int j = 0;
+        ArrayList<Order> orders;
+        OrderedItem item = new OrderedItem();
+        while(!orderFound){
+            orders = getTableOrders(istanza.tablesList.get(i).getTableID(),istanza.tablesList.get(i).getTableRoomNumber());
+            if(orders.size() != 0) {
+                while (!orderFound && k < orders.size()) {
+                    if (orders.get(k).getOrderID() == orderID) {
+                        orderFound = true;
+                        item = orders.get(k).getOrderedItem(lineNumber);
+                    } else k = k + 1;
+                }
+            }
+            i = i+1;
+        }
+        istanza.tablesList.get(i-1).getOrdersList().get(k).getOrderedItems().remove(item);
+    }
+
+
+    public void updateOrderedItem(int orderID, int lineNumber, String new_state){
+        boolean orderFound = false;
+        boolean itemFound = false;
+        int i = 0;
+        int k = 0;
+        int j = 0;
+        ArrayList<Order> orders;
+        List<OrderedItem> items;
+        while(!orderFound){
+            orders = getTableOrders(istanza.tablesList.get(i).getTableID(),istanza.tablesList.get(i).getTableRoomNumber());
+            while(!orderFound && k<orders.size()){
+                if(orders.get(k).getOrderID() == orderID){
+                    orderFound = true;
+                    items = orders.get(k).getOrderedItems();
+
+                    while(!itemFound){
+                        if(items.get(j).getLineNumber() == lineNumber)
+                            itemFound = true;
+                        else j= j+1;
+                    }
+                }else k = k +1;
+            }
+            i = i+1;
+        }
+        istanza.tablesList.get(i-1).getOrdersList().get(k).getOrderedItems().get(j).setActualState(new_state);
+    }
 
 }

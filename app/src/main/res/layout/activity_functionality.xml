@@ -7,10 +7,9 @@
 
     <ListView
         android:id="@+id/function_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#140071FF"
+        android:layout_width="411dp"
+        android:layout_height="690dp"
         android:visibility="visible"
-        tools:layout_editor_absoluteX="100dp"
-        tools:layout_editor_absoluteY="100dp" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="41dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

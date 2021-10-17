@@ -39,7 +39,7 @@ public class OrderListActivity extends AppCompatActivity {
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    private ArrayList<Order> orderList = new ArrayList<Order>();
+    private ArrayList<Order> orderList;
     private UserSessionController user_contr = new UserSessionController();
     private String tableID;
     private int roomNumber;
@@ -50,8 +50,8 @@ public class OrderListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orderlist);
-        tableID = getIntent().getStringExtra("tableID");
-        roomNumber = getIntent().getIntExtra("roomNumber",1);
+        tableID = UserSessionController.table_selected;
+        roomNumber = UserSessionController.roomNumber_selected;
 
         orderList = Data.getData().getTableOrders(tableID,roomNumber);
 
@@ -80,8 +80,6 @@ public class OrderListActivity extends AppCompatActivity {
 
     public void addOrder(View view){
         Intent i = new Intent(getApplicationContext(), OrderActivity.class);
-        i.putExtra("tableID", tableID);
-        i.putExtra("roomNumber", roomNumber);
         startActivity(i);
     }
 

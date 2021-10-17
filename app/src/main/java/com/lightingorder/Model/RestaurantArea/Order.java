@@ -87,6 +87,17 @@ public class Order {
         return to_ret;
     }
 
+    public OrderedItem getOrderedItem(int lineNumber){
+        boolean found = false;
+        int i = 0;
+        while(!found){
+            if(orderedItems.get(i).getLineNumber() == lineNumber)
+                found = true;
+            else i = i+1;
+        }
+        return orderedItems.get(i);
+    }
+
     public int getTableRoomNumber() {return this.tableRoomNumber;}
 
     public String getTableID() { return this.tableID;}

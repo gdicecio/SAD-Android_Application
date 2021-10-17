@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +27,8 @@ public class MakerActivity extends AppCompatActivity {
     ListView order_area_list;
     Button prendi_in_carico;
     Button segnala_completamento;
+    TextView nome_prodotto;
+    TextView numero_ordine;
 
     private ArrayList<Order> total_order;
     private ArrayList<OrderObjectAdapter> order_item_list;
@@ -34,6 +37,7 @@ public class MakerActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private int orderID;
     private int line_number;
+    private String product_name;
 
 
     @Override
@@ -51,9 +55,10 @@ public class MakerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 OrderObjectAdapter productData = order_item_list.get(position);
-                createItemOpPopup(productData.getProduct_state());
                 orderID = productData.getOrder_id();
                 line_number = productData.getLine_number();
+                product_name = productData.getProduct();
+                createItemOpPopup(productData.getProduct_state());
 
             }
         });
@@ -78,6 +83,11 @@ public class MakerActivity extends AppCompatActivity {
 
         prendi_in_carico = (Button) itemOpPopup.findViewById(R.id.button_prendi_in_carico);
         segnala_completamento = (Button) itemOpPopup.findViewById(R.id.button_completamento);
+        numero_ordine = (TextView) itemOpPopup.findViewById(R.id.textView_order_ID_popup_chef);
+        nome_prodotto = (TextView) itemOpPopup.findViewById(R.id.textView_nome_prodotto_popup_chef);
+
+        numero_ordine.setText(Integer.toString(orderID));
+        nome_prodotto.setText(product_name);
 
         if(state.equals("WaitingForWorking")){
             segnala_completamento.setVisibility(View.INVISIBLE);

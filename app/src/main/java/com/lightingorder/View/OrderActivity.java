@@ -46,8 +46,8 @@ public class OrderActivity extends AppCompatActivity {
         String[] items = Data.getData().getMenuItemsName();
         String[] merce_additiva = {"No selection","Patate","Origano","Aglio","Funghi","Olive"};
 
-        tableID = getIntent().getStringExtra("tableID");
-        roomNumber = getIntent().getIntExtra("roomNumber",1);
+        tableID = UserSessionController.table_selected;
+        roomNumber = UserSessionController.roomNumber_selected;
 
         prodotto = (Spinner) findViewById(R.id.prodotto_spinner);
         merceDaAggiungere = (Spinner) findViewById(R.id.additive_spinner);

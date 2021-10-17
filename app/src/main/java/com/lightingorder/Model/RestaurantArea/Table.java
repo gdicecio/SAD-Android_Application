@@ -46,16 +46,17 @@ public class Table {
 
     public void addOrderToTable(Order new_order){this.orders.add(new_order);}
 
-    public void removeOrderFromTable(int orderID){
-        boolean find = false;
+    public boolean removeOrder(int orderID){
+        boolean found = false;
         int i = 0;
-        while(!find){
+        while(!found && i < orders.size()){
             if(this.orders.get(i).getOrderID() == orderID) {
-                find = true;
+                found = true;
                 this.orders.remove(i);
             }
             i = i + 1;
         }
+        return found;
     }
 
     public int getTableRoomNumber() {return tableRoomNumber;}
