@@ -28,6 +28,9 @@ public class Order {
     @Expose(serialize = true, deserialize = true)
     private int tableRoomNumber;
 
+    @Expose(serialize = true, deserialize = true)
+    private String tableID;
+
     @Expose(serialize=true,deserialize=true)
     private List<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
 
@@ -84,4 +87,7 @@ public class Order {
         return to_ret;
     }
 
+    public int getTableRoomNumber() {return this.tableRoomNumber;}
+
+    public String getTableID() { return this.tableID;}
 }

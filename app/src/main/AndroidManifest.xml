@@ -39,6 +39,11 @@
             android:name=".View.OrderListActivity" >
         </activity>
 
+
+        <activity
+            android:name=".View.MakerActivity" >
+        </activity>
+
     </application>
 
 </manifest>

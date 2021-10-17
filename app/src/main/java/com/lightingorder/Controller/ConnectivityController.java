@@ -31,6 +31,7 @@ import com.lightingorder.Model.messages.orderToTableGenerationRequest;
 import com.lightingorder.Model.messages.tableOperation;
 import com.lightingorder.Model.messages.tableRequest;
 import com.lightingorder.StdTerms;
+import com.lightingorder.View.MakerActivity;
 import com.lightingorder.View.OrderListActivity;
 import com.lightingorder.View.TableActivity;
 
@@ -212,6 +213,7 @@ public class ConnectivityController {   //Singleton
 
 
                         case "orderRequest":
+                            orderRequest order_msg = gsonReq.fromJson(req, orderRequest.class);
                             ArrayList<Order> orders = new ArrayList<Order>();
                             try {
                                 JSONArray j = new JSONArray(msg_rcvd.response);
@@ -223,8 +225,13 @@ public class ConnectivityController {   //Singleton
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            Data.getData().setOrdersList(orders);
-                            //TODO vai alla schermata per realizzatori
+                            Data.getData().setOrdersList(orders, order_msg.area);
+
+                            Activity current4 = AppStateController.getApplication().getCurrent_activity();
+                            Intent intent;
+                            intent = new Intent(current4, MakerActivity.class);
+                            current4.startActivity(intent);
+
                             txt_to_show = "Order list updated";
                             break;
 

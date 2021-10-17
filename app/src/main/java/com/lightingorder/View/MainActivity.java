@@ -30,10 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
     EditText ed_user_id;
     Button b_login;
-    UserSessionController user_contr = new UserSessionController();
+    private UserSessionController user_contr = new UserSessionController();
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    ConnectivityController conn_contr = ConnectivityController.getConnectivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ed_user_id = (EditText) findViewById(R.id.user_id);
         b_login = (Button) findViewById(R.id.login);
-        conn_contr.configPostMapping();
-        conn_contr.startServer(StdTerms.server_port);
+        ConnectivityController.getConnectivity().configPostMapping();
+        ConnectivityController.getConnectivity().startServer(StdTerms.server_port);
     }
 
     public void sendLogin(View view){

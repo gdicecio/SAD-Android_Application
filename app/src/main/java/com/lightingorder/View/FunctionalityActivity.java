@@ -56,7 +56,7 @@ public class FunctionalityActivity extends AppCompatActivity {
                 if(use_case.equals(StdTerms.useCases.CreaOrdinazione.name()) ||
                         use_case.equals(StdTerms.useCases.AggiornaStatoTavolo.name())) {
                     ConnectivityController.sendTableRequest(user_contr,proxy_addr);
-                    Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Table Request request sent");
+                    Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Table request sent");
                     //Navigate to TableActivity when the response from the main system arrives
 
                 }
@@ -65,18 +65,10 @@ public class FunctionalityActivity extends AppCompatActivity {
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniForno.name()) ){
                     ConnectivityController.sendOrderRequest(user_contr,proxy_addr);
                     Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Order request sent");
-
                 }
             }
         });
         backgroundUpdateModel();
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        AppStateController.getApplication().setCurrent_activity(this);
     }
 
     private void backgroundUpdateModel(){
@@ -86,7 +78,14 @@ public class FunctionalityActivity extends AppCompatActivity {
             ConnectivityController.sendMenuRequest(
                     user_contr,
                     proxy_cameriere);
-            Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Menù request sent");
+            Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Menu request sent");
         }
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppStateController.getApplication().setCurrent_activity(this);
     }
 }

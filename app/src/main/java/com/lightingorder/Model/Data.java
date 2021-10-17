@@ -5,6 +5,7 @@ import com.lightingorder.Model.MenuAndWareHouseArea.MenuItem;
 import com.lightingorder.Model.RestaurantArea.Order;
 import com.lightingorder.Model.RestaurantArea.OrderedItem;
 import com.lightingorder.Model.RestaurantArea.Table;
+import com.lightingorder.StdTerms;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.List;
 public class Data {
     private static Data istanza = null;
     private ArrayList<Table> tablesList = new ArrayList<>();
-    private ArrayList<Order> ordersList = new ArrayList<>();
+    private ArrayList<Order> kitchen_ordersList = new ArrayList<>();
+    private ArrayList<Order> bar_ordersList = new ArrayList<>();
+    private ArrayList<Order> pizza_ordersList = new ArrayList<>();
     private ArrayList<MenuItem> menuList = new ArrayList<>();
     private ArrayList<Goods> goodsList = new ArrayList<>();
 
@@ -28,7 +31,16 @@ public class Data {
 
     public ArrayList<Table> getTablesList() {return istanza.tablesList;}
 
-    public ArrayList<Order> getOrdersList() {return istanza.ordersList;}
+    public ArrayList<Order> getOrdersList(String role) {
+        if(role.equals(StdTerms.roles.Forno.name()))
+            return istanza.pizza_ordersList;
+        else if(role.equals(StdTerms.roles.Cucina.name()))
+            return istanza.kitchen_ordersList;
+        else if(role.equals(StdTerms.roles.Bar.name()))
+            return istanza.bar_ordersList;
+        else
+            return new ArrayList<Order>();
+    }
 
     public ArrayList<MenuItem> getMenuList(){ return istanza.menuList; }
 
@@ -46,7 +58,14 @@ public class Data {
 
     public void setTablesList(ArrayList<Table> tablesList) {istanza.tablesList = tablesList;}
 
-    public void setOrdersList(ArrayList<Order> ordersList) {istanza.ordersList = ordersList;}
+    public void setOrdersList(ArrayList<Order> ordersList, String role) {
+        if(role.equals(StdTerms.roles.Forno.name()))
+            istanza.pizza_ordersList = ordersList;
+        else if(role.equals(StdTerms.roles.Cucina.name()))
+            istanza.kitchen_ordersList = ordersList;
+        else if(role.equals(StdTerms.roles.Bar.name()))
+            istanza.bar_ordersList = ordersList;
+    }
 
     public void setMenuList(ArrayList<MenuItem> menuList){ istanza.menuList = menuList; }
 
@@ -58,46 +77,6 @@ public class Data {
             if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
                 find = true;
                 istanza.tablesList.get(i).setTableState(new_state);
-            }
-            i = i + 1;
-        }
-    }
-
-    public List<OrderedItem> getOrderedItemsForOrder(String tableID, int roomNumber, int orderID){
-        ArrayList<Order> orders = getTableOrders(tableID,roomNumber);
-        boolean find = false;
-        int i = 0;
-        while(!find){
-            if(orders.get(i).getOrderID() == orderID){
-                find = true;
-            }
-            else i = i + 1;
-        }
-        return orders.get(i).getOrderedItems();
-    }
-
-
-    public String[] getProductsNameForOrder(String tableID, int roomNumber, int orderID){
-        ArrayList<Order> orders = getTableOrders(tableID,roomNumber);
-        boolean find = false;
-        int i = 0;
-        while(!find){
-            if(orders.get(i).getOrderID() == orderID){
-                find = true;
-            }
-            else i = i + 1;
-        }
-
-        return orders.get(i).getOrderProductsName();
-    }
-
-    public void removeOrderFromList(int orderID){
-        boolean find = false;
-        int i = 0;
-        while(!find){
-            if(istanza.ordersList.get(i).getOrderID() == orderID) {
-                find = true;
-                istanza.ordersList.remove(i);
             }
             i = i + 1;
         }
@@ -116,21 +95,48 @@ public class Data {
     }
 
 
-
-    public void addOrderToTable(String tableID, int roomNumber, Order new_order){
+    public List<OrderedItem> getOrderedItemsForOrder(String tableID, int roomNumber, int orderID){
+        ArrayList<Order> orders = getTableOrders(tableID,roomNumber);
         boolean find = false;
         int i = 0;
         while(!find){
-            if(istanza.tablesList.get(i).getTableID().equals(tableID) && istanza.tablesList.get(i).getTableRoomNumber() == roomNumber) {
+            if(orders.get(i).getOrderID() == orderID){
                 find = true;
-                istanza.tablesList.get(i).addOrderToTable(new_order);
             }
-            i = i + 1;
+            else i = i + 1;
         }
-        //aggiunta dell'ordine anche alla lista di ordini
-        this.ordersList.add(new_order);
+        return orders.get(i).getOrderedItems();
     }
 
+
+    public void removeOrderFromList(int orderID) {
+        boolean findBar = false;
+        boolean findKitch = false;
+        boolean findPizza = false;
+        int i = 0;
+        while (!(findBar && findKitch && findPizza)) {
+            if (!findBar) {
+                if (istanza.bar_ordersList.get(i).getOrderID() == orderID) {
+                    findBar = true;
+                    istanza.bar_ordersList.remove(i);
+                }
+            }
+            if (!findKitch) {
+                if (istanza.kitchen_ordersList.get(i).getOrderID() == orderID) {
+                    findKitch = true;
+                    istanza.kitchen_ordersList.remove(i);
+                }
+            }
+            if (!findKitch) {
+                if (istanza.kitchen_ordersList.get(i).getOrderID() == orderID) {
+                    findKitch = true;
+                    istanza.kitchen_ordersList.remove(i);
+                }
+            }
+
+            i = i+1;
+        }
+    }
 
 
     public void deleteOrderFromTable(String tableID, int roomNumber, int orderID){
