@@ -1,4 +1,4 @@
-package com.lightingorder;
+package com.lightingorder.Model;
 
 import android.graphics.Color;
 

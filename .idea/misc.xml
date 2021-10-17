@@ -6,8 +6,27 @@
         <entry key="..\:/Users/Giuseppe/Universita/x. Software Architecture Design/1. Progetto/Android/LightiningOrder/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/Giuseppe/Universita/x. Software Architecture Design/1. Progetto/Android/LightiningOrder/app/src/main/res/layout/item_list.xml" value="0.22" />
         <entry key="..\:/Users/Giuseppe/Universita/x. Software Architecture Design/1. Progetto/Android/LightiningOrder/app/src/main/res/layout/roles_selection.xml" value="0.151268115942029" />
+        <entry key="..\:/Users/Giuseppe/Universita/x. Software Architecture Design/1. Progetto/Github/SAD-Android_Application/app/src/main/res/layout/activity_order.xml" value="0.25" />
         <entry key="..\:/Users/Giuseppe/Universita/x. Software Architecture Design/1. Progetto/Github/SAD-Android_Application/app/src/main/res/layout/table_map.xml" value="0.14990942028985507" />
         <entry key="..\:/Users/Giuseppe/Universita/x. Software Architecture Design/1. Progetto/Github/SAD-Android_Application/app/src/main/res/layout/tables_item_list.xml" value="0.14990942028985507" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/activity_main.xml" value="0.2151268115942029" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/activity_maker.xml" value="0.4961734693877551" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/activity_order.xml" value="0.4" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/activity_orderlist.xml" value="0.1" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/chef_item_operation_popup.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/item_list.xml" value="0.182518115942029" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/item_list_order.xml" value="0.6" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/item_list_order_maker.xml" value="0.5251396648044693" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/item_order_management.xml" value="0.4" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/popup.xml" value="0.176" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/popup_chef_item_operation.xml" value="0.2128623188405797" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/popup_notification.xml" value="0.21354166666666666" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/popup_order_management.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/popup_table_operation.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/popupnNotification.xml" value="0.1634963768115942" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/roles_selection.xml" value="0.182518115942029" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/table_map.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Nicola/Dropbox/MAGISTRALE/SAD/SAD-Android_Application/app/src/main/res/layout/tables_item_list.xml" value="0.23854166666666668" />
       </map>
     </option>
   </component>

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LightiningOrder">
         <activity
-            android:name=".MainActivity"
+            android:name=".View.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,12 +24,26 @@
         </activity>
 
         <activity
-            android:name=".FunctionalityActivity" >
+            android:name=".View.FunctionalityActivity" >
         </activity>
 
         <activity
-            android:name=".TableActivity" >
+            android:name=".View.TableActivity" >
         </activity>
+
+        <activity
+            android:name=".View.OrderActivity" >
+        </activity>
+
+        <activity
+            android:name=".View.OrderListActivity" >
+        </activity>
+
+
+        <activity
+            android:name=".View.MakerActivity" >
+        </activity>
+
     </application>
 
 </manifest>
