@@ -35,7 +35,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         String product_list = "";
         int k=0;
         for(OrderedItem i : local_order.getOrderedItems()){
-            product_list += i.getItem();
+            product_list += i.getItem() + "  -  " + Integer.toString(i.getPriority());
             k += 1;
             if(k != local_order.getOrderedItems().size())
                 product_list += "\n";

@@ -102,7 +102,9 @@ public class ConnectivityController {   //Singleton
                 String resp = ""+msg_rcvd.response;
 
                 if(!(msg_rcvd.result.contains("Failed") || msg_rcvd.result.contains("NotFound") ||
-                        resp.contains("NotCreated"))) {
+                        resp.contains("NotCreated") || resp.contains("NotCanceled") ||
+                        msg_rcvd.result.contains("Aborted") || resp.contains("false"))) {
+
                     switch (message_type) {
 
                         case "cancelOrderedItemRequest":
@@ -152,6 +154,7 @@ public class ConnectivityController {   //Singleton
 
                             Activity current2 = AppStateController.getApplication().getCurrent_activity();
                             if(current2.getLocalClassName().equals("View.MakerActivity")){
+                                //current2.recreate();
                                 current2.finish();
                                 current2.startActivity(current2.getIntent());
                             }
@@ -168,9 +171,9 @@ public class ConnectivityController {   //Singleton
 
                             Activity current3 = AppStateController.getApplication().getCurrent_activity();
                             if(current3.getLocalClassName().equals("View.MakerActivity")){
-                                //current3.finish();
-                                //current3.startActivity(current3.getIntent());
-                                current3.recreate();
+                                current3.finish();
+                                current3.startActivity(current3.getIntent());
+                                //current3.recreate();
                             }
                             txt_to_show = "Request accepted";
                             Log.d("SERVER","ItemWorkingRequest: Request accepted");
@@ -520,7 +523,7 @@ public class ConnectivityController {   //Singleton
         Gson gson = new Gson();
         orderRequest req_body = new orderRequest(
                 us_contr.getUserID(),
-                proxy_addr,
+                us_contr.getCurrentRole(),
                 StdTerms.messages.orderRequest.name(),
                 "",
                 "",
@@ -597,7 +600,7 @@ public class ConnectivityController {   //Singleton
         Gson gson = new Gson();
         itemOpRequest req_body = new itemOpRequest(
                 us_contr.getUserID(),
-                proxy_addr,
+                us_contr.getCurrentRole(),
                 StdTerms.messages.itemCompleteRequest.name(),
                 "",
                 "",
@@ -615,7 +618,7 @@ public class ConnectivityController {   //Singleton
         Gson gson = new Gson();
         itemOpRequest req_body = new itemOpRequest(
                 us_contr.getUserID(),
-                proxy_addr,
+                us_contr.getCurrentRole(),
                 StdTerms.messages.itemWorkingRequest.name(),
                 "",
                 "",
