@@ -45,6 +45,7 @@ public class OrderListActivity extends AppCompatActivity {
     private int roomNumber;
     private List<OrderedItem> orderedProducts;
     private int orderID;
+    private OrderListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,15 @@ public class OrderListActivity extends AppCompatActivity {
         table_number.setText(tableID);
         room_number.setText(Integer.toString(roomNumber));
 
+        String tableState = Data.getData().getTable(tableID,roomNumber).getTableState();
+        if(tableState.equals(StdTerms.statesList.free.name()) ||
+                tableState.equals(StdTerms.statesList.reserved.name()))
+            addOrder.setVisibility(View.INVISIBLE);
+        else
+            addOrder.setVisibility(View.VISIBLE);
+
+
+
         order_list.setAdapter(adapter);
         order_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -75,6 +85,7 @@ public class OrderListActivity extends AppCompatActivity {
                 return true;
             }
         });
+
     }
 
 
@@ -133,10 +144,7 @@ public class OrderListActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
-        String tableState = Data.getData().getTable(tableID,roomNumber).getTableState();
-        if(tableState.equals(StdTerms.statesList.free.name()) ||
-                tableState.equals(StdTerms.statesList.reserved.name()))
-            addOrder.setVisibility(View.INVISIBLE);
-        else addOrder.setVisibility(View.VISIBLE);
+        Log.d("CURRENT_ACTIVITY",
+                "CURRENT ACTIVITY : "+AppStateController.getApplication().getCurrent_activity().getLocalClassName());
     }
 }

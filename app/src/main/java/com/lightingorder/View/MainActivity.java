@@ -62,10 +62,21 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 // When timer is finished // Execute your code here
                 if(AppStateController.getApplication().connectionStateIsOK()){
-                    Intent i = new Intent(getApplicationContext(), FunctionalityActivity.class);
-                    startActivity(i);
+                    if(user_contr.getHashRuoli_Proxy().size() > 0) {
+                        user_contr.setloginResult(true);
+                        Intent i = new Intent(getApplicationContext(), FunctionalityActivity.class);
+                        startActivity(i);
+                        Log.d("LOGIN","LOGIN successful");
+                    }
+                    else{
+                        user_contr.setloginResult(false);
+                        Log.d("LOGIN","LOGIN failed");
+                    }
                 }
-                else Log.d("PROXY","MAIN ACTIVITY: Proxy not reachable");
+                else {
+                    Log.d("PROXY","MAIN ACTIVITY: Proxy login not reachable, login failed");
+                    user_contr.setloginResult(false);
+                }
             }
             public void onTick(long millisUntilFinished) {
                 // millisUntilFinished    The amount of time until finished.
@@ -77,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
+        Log.d("CURRENT_ACTIVITY",
+                "CURRENT ACTIVITY : "+AppStateController.getApplication().getCurrent_activity().getLocalClassName());
     }
 }
 

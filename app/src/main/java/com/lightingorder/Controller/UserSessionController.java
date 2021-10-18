@@ -92,7 +92,7 @@ public class UserSessionController {
         return funs;
     }
 
-    public boolean getLoginResult(){return utente.isLoginSuccesful();}
+    public boolean getLoginResult(){return utente.isLoginSuccessful();}
 
-    public void setloginResult(boolean result){ utente.setLoginSuccesful(result);}
+    public void setloginResult(boolean result){ utente.setLoginSuccessful(result);}
 }

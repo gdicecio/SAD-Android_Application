@@ -5,11 +5,11 @@ import java.util.HashMap;
 //Singleton
 public class User {
     private static User istanza = null;
-    private  String ID;
+    private  String ID = "";
     private  HashMap<String,String> ruoli_proxy = new HashMap<String,String>();
-    private  String ipAddress;
-    private  String current_role;
-    private boolean loginSuccesful;
+    private  String ipAddress = "";
+    private  String current_role = "";
+    private boolean loginSuccessful = false;
 
 
     private User() { }
@@ -51,12 +51,12 @@ public class User {
 
     public void setCurrent_role(String current_role) {istanza.current_role = current_role;}
 
-    public boolean isLoginSuccesful() {
-        return loginSuccesful;
+    public boolean isLoginSuccessful() {
+        return istanza.loginSuccessful;
     }
 
-    public void setLoginSuccesful(boolean loginSuccesful) {
-        this.loginSuccesful = loginSuccesful;
+    public void setLoginSuccessful(boolean loginSuccessful) {
+        istanza.loginSuccessful = loginSuccessful;
     }
 
 }

@@ -54,7 +54,6 @@ public class FunctionalityActivity extends AppCompatActivity {
                         use_case.equals(StdTerms.useCases.AggiornaStatoTavolo.name())) {
                     ConnectivityController.sendTableRequest(user_contr,proxy_addr);
                     Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Table request sent");
-                    //Navigate to TableActivity when the response from the main system arrives
 
                 }
                 else if(use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniBar.name()) ||
@@ -84,5 +83,9 @@ public class FunctionalityActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
+        Log.d("CURRENT_ACTIVITY",
+                "CURRENT ACTIVITY : "+AppStateController.getApplication().getCurrent_activity().getLocalClassName());
     }
+
+
 }

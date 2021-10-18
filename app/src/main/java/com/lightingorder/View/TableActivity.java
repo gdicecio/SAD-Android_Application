@@ -2,6 +2,7 @@ package com.lightingorder.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -103,9 +104,8 @@ public class TableActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
-        //ArrayList<Table> tables = Data.getData().getTablesList();
-        //TablesAdapter tab_adap = new TablesAdapter(this, tables);
-        //tables_view.setAdapter(tab_adap);
+        Log.d("CURRENT_ACTIVITY",
+                "CURRENT ACTIVITY : "+AppStateController.getApplication().getCurrent_activity().getLocalClassName());
     }
 
 }

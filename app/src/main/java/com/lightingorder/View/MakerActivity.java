@@ -1,6 +1,7 @@
 package com.lightingorder.View;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -121,6 +122,8 @@ public class MakerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         AppStateController.getApplication().setCurrent_activity(this);
+        Log.d("CURRENT_ACTIVITY",
+                "CURRENT ACTIVITY : "+AppStateController.getApplication().getCurrent_activity().getLocalClassName());
     }
 }
 
