@@ -65,6 +65,7 @@ public class MakerActivity extends AppCompatActivity {
         });
     }
 
+
     public ArrayList<OrderObjectAdapter> getOrdersArea(){
         order_item_list = new ArrayList<OrderObjectAdapter>();
         total_order = new ArrayList<Order>();
@@ -78,6 +79,8 @@ public class MakerActivity extends AppCompatActivity {
         return order_item_list;
     }
 
+
+
     public void createItemOpPopup(String state){
         dialogBuilder = new AlertDialog.Builder(this);
         final View itemOpPopup = getLayoutInflater().inflate(R.layout.popup_chef_item_operation,null);
@@ -89,6 +92,7 @@ public class MakerActivity extends AppCompatActivity {
 
         numero_ordine.setText(Integer.toString(orderID));
         nome_prodotto.setText(product_name);
+
 
         if(state.equals("WaitingForWorking")){
             segnala_completamento.setVisibility(View.INVISIBLE);
@@ -107,13 +111,15 @@ public class MakerActivity extends AppCompatActivity {
         else{}
     }
 
+
     public void itemCompleted(View view){
-        ConnectivityController.sendItemCompletedRequest(user_contr, user_contr.getCurrentProxy(), orderID,line_number);
+        ConnectivityController.sendItemCompletedRequest(user_contr, user_contr.getCurrentProxy(), orderID, line_number);
         dialog.dismiss();
     }
 
+
     public void itemWorking(View view){
-        ConnectivityController.sendItemWorkingRequest(user_contr, user_contr.getCurrentProxy(), orderID,line_number);
+        ConnectivityController.sendItemWorkingRequest(user_contr, user_contr.getCurrentProxy(), orderID, line_number);
         dialog.dismiss();
     }
 

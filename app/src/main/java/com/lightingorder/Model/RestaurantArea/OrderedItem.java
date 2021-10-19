@@ -71,7 +71,7 @@ public class OrderedItem {
     }
 
     public int getLineNumber() {
-        return lineNumber;
+        return this.lineNumber;
     }
 
     public void setLineNumber(int lineNumber) {

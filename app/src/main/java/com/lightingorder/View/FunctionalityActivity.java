@@ -59,7 +59,8 @@ public class FunctionalityActivity extends AppCompatActivity {
                 else if(use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniBar.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniCucina.name()) ||
                         use_case.equals(StdTerms.useCases.VisualizzaOrdinazioniForno.name()) ){
-                    ConnectivityController.sendOrderRequest(user_contr,user_contr.getCurrentProxy());
+                    ConnectivityController.sendOrderRequest(user_contr,user_contr.getCurrentProxy(),
+                            user_contr.getCurrentRole());
                     Log.d("ACTIVITY","FUNCTIONALITY ACTIVITY: Order request sent");
                 }
             }

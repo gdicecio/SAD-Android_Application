@@ -112,32 +112,42 @@ public class Data {
     }
 
 
-    public void updateItemState(int orderID, int lineNumber, String new_state) {
-        boolean findBar = false;
-        boolean findKitch = false;
-        boolean findPizza = false;
+    public void updateItemState(int orderID, int lineNumber, String new_state, String area) {
+
+        boolean found = false;
         int i = 0;
-        while (!(findBar && findKitch && findPizza)) {
-            if (istanza.bar_ordersList.size() > 0 && (!findBar) ) {
-                if (istanza.bar_ordersList.get(i).getOrderID() == orderID) {
-                    findBar = true;
-                    istanza.bar_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
-                }
-            }
-            if (istanza.kitchen_ordersList.size() > 0 && (!findKitch)) {
+
+        if(area.equals(StdTerms.roles.Cucina.name())) {
+
+            while (!found) {
                 if (istanza.kitchen_ordersList.get(i).getOrderID() == orderID) {
-                    findKitch = true;
+                    found = true;
                     istanza.kitchen_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
-                }
+                }else i = i +1;
             }
-            if (istanza.pizza_ordersList.size() > 0 && (!findPizza)) {
-                if (istanza.pizza_ordersList.get(i).getOrderID() == orderID) {
-                    findPizza = true;
-                    istanza.pizza_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
-                }
-            }
-            i = i+1;
         }
+
+
+        else if(area.equals(StdTerms.roles.Forno.name())){
+
+            while(!found) {
+                if(istanza.pizza_ordersList.get(i).getOrderID() == orderID){
+                    found = true;
+                    istanza.pizza_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
+                }else i = i +1;
+            }
+        }
+
+        else if(area.equals(StdTerms.roles.Bar.name())) {
+
+            while (!found) {
+                if (istanza.bar_ordersList.get(i).getOrderID() == orderID) {
+                    found = true;
+                    istanza.bar_ordersList.get(i).getOrderedItem(lineNumber).setActualState(new_state);
+                } else i = i + 1;
+            }
+        }
+
     }
 
 

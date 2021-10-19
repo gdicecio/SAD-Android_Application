@@ -30,6 +30,7 @@ import com.lightingorder.Model.messages.cancelOrderRequest;
 import com.lightingorder.Model.messages.itemOpRequest;
 import com.lightingorder.Model.messages.loginRequest;
 import com.lightingorder.Model.messages.menuRequest;
+import com.lightingorder.Model.messages.orderNotification;
 import com.lightingorder.Model.messages.orderRequest;
 import com.lightingorder.Model.messages.orderToTableGenerationRequest;
 import com.lightingorder.Model.messages.tableOperation;
@@ -150,7 +151,8 @@ public class ConnectivityController {   //Singleton
                         case "itemCompleteRequest":
                             itemOpRequest item_compl_msg = gsonReq.fromJson(req, itemOpRequest.class);
                             Data.getData().updateItemState(item_compl_msg.orderID,
-                                    item_compl_msg.itemLineNumber, StdTerms.state_item.Completed.name());
+                                    item_compl_msg.itemLineNumber, StdTerms.state_item.Completed.name(),
+                                    item_compl_msg.proxySource);
 
                             Activity current2 = AppStateController.getApplication().getCurrent_activity();
                             if(current2.getLocalClassName().equals("View.MakerActivity")){
@@ -167,7 +169,8 @@ public class ConnectivityController {   //Singleton
                         case "itemWorkingRequest":
                             itemOpRequest item_work_msg = gsonReq.fromJson(req, itemOpRequest.class);
                             Data.getData().updateItemState(item_work_msg.orderID,
-                                    item_work_msg.itemLineNumber, StdTerms.state_item.Working.name());
+                                    item_work_msg.itemLineNumber, StdTerms.state_item.Working.name(),
+                                    item_work_msg.proxySource);
 
                             Activity current3 = AppStateController.getApplication().getCurrent_activity();
                             if(current3.getLocalClassName().equals("View.MakerActivity")){
@@ -233,14 +236,8 @@ public class ConnectivityController {   //Singleton
                             }
                             else if(current6.getLocalClassName().equals("View.OrderListActivity")){
                                 current6.finish();
-                                AppStateController.getApplication().getCurrent_activity().recreate();
                             }
-                            else if(current6.getLocalClassName().equals("View.OrderActivity")){
-                                Activity parent = current6.getParent();
-                                current6.finish();//Close OrderActivity
-                                AppStateController.getApplication().getCurrent_activity().finish();//Close OrderListActivity
-                                AppStateController.getApplication().getCurrent_activity().recreate();
-                            }
+
 
                             txt_to_show = "Table list updated";
                             Log.d("SERVER","TableRequest: Table list updated");
@@ -330,12 +327,12 @@ public class ConnectivityController {   //Singleton
 
                             current_activity = AppStateController.getApplication().getCurrent_activity();
 
-                            if(!(user_contr.getCurrentRole().equals(StdTerms.roles.Accoglienza.name()))
-                                    || current_activity.getLocalClassName().equals("View.FunctionalityActivity")) {
+                            if(current_activity.getLocalClassName().equals("View.FunctionalityActivity")
+                                    || !(user_contr.getCurrentRole().equals(StdTerms.roles.Accoglienza.name())) ) {
 
                                 popup_txt = "Il tavolo " + tab_upd.tableID + " è in attesa di ordinazioni";
                                 notificationType = StdTerms.messages.userWaitingNotification.name();
-                                createNotificationPopup(popup_txt, notificationType, tab_upd.tableID, tab_upd.tableRoomNumber);
+                                createWaiterNotificationPopup(popup_txt, notificationType, tab_upd.tableID, tab_upd.tableRoomNumber);
 
                             }
                             Log.d("SERVER", "SERVER: Notification - User waiting Notification received ");
@@ -343,10 +340,14 @@ public class ConnectivityController {   //Singleton
 
 
                         case "orderNotification":
+
                             notificationType = StdTerms.messages.orderNotification.name();
+                            orderNotification ord_not = gsonReq.fromJson(req, orderNotification.class);
                             current_activity = AppStateController.getApplication().getCurrent_activity();
 
-                            if(current_activity.getLocalClassName().equals("View.MakerActivity")){
+
+                            if(current_activity.getLocalClassName().equals("View.MakerActivity") &&
+                                    user_contr.getCurrentRole().equals(ord_not.area)){
 
                                 Intent i = new Intent(current_activity, MakerActivity.class);
                                 current_activity.finish();
@@ -365,7 +366,7 @@ public class ConnectivityController {   //Singleton
                             else{
 
                                 popup_txt = "Un ordine è stato aggiunto";
-                                createNotificationPopup(popup_txt, notificationType);
+                                createMakerNotificationPopup(popup_txt, notificationType, ord_not.area);
 
                             }
 
@@ -516,14 +517,13 @@ public class ConnectivityController {   //Singleton
     }
 
 
-    public static void sendOrderRequest(UserSessionController us_contr, String proxy_addr){
+    public static void sendOrderRequest(UserSessionController us_contr, String proxy_addr, String area){
 
-        String area = us_contr.getCurrentRole();
 
         Gson gson = new Gson();
         orderRequest req_body = new orderRequest(
                 us_contr.getUserID(),
-                us_contr.getCurrentRole(),
+                area,
                 StdTerms.messages.orderRequest.name(),
                 "",
                 "",
@@ -602,8 +602,8 @@ public class ConnectivityController {   //Singleton
                 us_contr.getUserID(),
                 us_contr.getCurrentRole(),
                 StdTerms.messages.itemCompleteRequest.name(),
-                "",
-                "",
+                null,
+                null,
                 orderID,
                 lineNumber);
         String msg_body = gson.toJson(req_body);
@@ -620,8 +620,8 @@ public class ConnectivityController {   //Singleton
                 us_contr.getUserID(),
                 us_contr.getCurrentRole(),
                 StdTerms.messages.itemWorkingRequest.name(),
-                "",
-                "",
+                null,
+                null,
                 orderID,
                 lineNumber);
         String msg_body = gson.toJson(req_body);
@@ -629,7 +629,7 @@ public class ConnectivityController {   //Singleton
     }
 
 
-    private void createNotificationPopup(String notificationTxt, String notificationType, String tableID, int roomNumber){
+    private void createNotificationPopup(String notificationTxt, String notificationType, String tableID, int roomNumber, String area){
 
         Activity current = AppStateController.getApplication().getCurrent_activity();
         dialogBuilder = new AlertDialog.Builder(current);
@@ -645,7 +645,7 @@ public class ConnectivityController {   //Singleton
                 if(notificationType.equals(StdTerms.messages.userWaitingNotification.name()))
                     goToTablePage(tableID, roomNumber);
                 else
-                    goToMakerPage();
+                    goToMakerPage(area);
             }
         });
 
@@ -672,8 +672,12 @@ public class ConnectivityController {   //Singleton
     }
 
 
-    public void createNotificationPopup(String notificationTxt, String notificationType){
-        createNotificationPopup(notificationTxt, notificationType, null, 0);
+    public void createWaiterNotificationPopup(String notificationTxt, String notificationType, String tableID, int roomNumber){
+        createNotificationPopup(notificationTxt, notificationType, tableID, roomNumber, null);
+    }
+
+    public void createMakerNotificationPopup(String notificationTxt, String notificationType, String area ){
+        createNotificationPopup(notificationTxt, notificationType, null , 0, area);
     }
 
 
@@ -681,13 +685,19 @@ public class ConnectivityController {   //Singleton
 
         UserSessionController us_contr = new UserSessionController();
         Activity current = AppStateController.getApplication().getCurrent_activity();
-        if(!current.getLocalClassName().equals("View.TableActivity")){
+
+        if(!current.getLocalClassName().equals("View.TableActivity")) {
+
+            us_contr.setCurrentRole(StdTerms.roles.Cameriere.name());
+            Log.d("USER","USER : Ruolo corrente: "+ us_contr.getCurrentRole() );
+            sendTableRequest(us_contr, us_contr.getCurrentProxy());
             dialog.dismiss();
-            sendTableRequest(us_contr,
-                    us_contr.getHashRuoli_Proxy().get(StdTerms.roles.Cameriere.name()));
+            if(!current.getLocalClassName().equals("View.FunctionalityActivity"))
+                current.finish();
 
         }
         else{
+
             Data.getData().updateTableState(tableID,
                                             tableRoomNumber,
                                             StdTerms.statesList.waitingForOrders.name());
@@ -696,14 +706,19 @@ public class ConnectivityController {   //Singleton
                 current.finish();
                 current.startActivity(current.getIntent());
             }
-        //FINISH DELL'ACTIVITY CORRENTE E GO TO TABLE ACTIVITY
-        Log.d("POPUP","Tasto go to page cliccato");
+
     }
 
-    private void goToMakerPage(){
+    private void goToMakerPage(String area){
         UserSessionController us_contr = new UserSessionController();
-        //sendOrderRequest(us_contr,us_contr.getHashRuoli_Proxy().get());
+        Activity current = AppStateController.getApplication().getCurrent_activity();
+        if(current.getLocalClassName().equals("View.MakerActivity"))
+            current.finish();
 
+        us_contr.setCurrentRole(area);
+        Log.d("USER","USER : Ruolo corrente: "+ us_contr.getCurrentRole() );
+        sendOrderRequest(us_contr,us_contr.getCurrentProxy(),area);
+        dialog.dismiss();
     }
 
 
